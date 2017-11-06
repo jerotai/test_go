@@ -2,6 +2,7 @@ package cmd
 
 import (
         "test_go/api/controller/game"
+        "test_go/core/model/database/system"
 
 	"github.com/spf13/cobra"
         "fmt"
@@ -22,7 +23,10 @@ var devCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
                 switch args[0] {
                         case "dbconnect":
-                                game.GameList()
+                                system.AdminList()
+                                //fmt.Print(err)
+                        case "GameList":
+                                fmt.Print(game.NewGameList().List())
                         default:
                                 fmt.Print("default")
                 }

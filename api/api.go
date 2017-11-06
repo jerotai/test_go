@@ -23,5 +23,4 @@ func (s *APIService) Start() {
 	echo.Server.Addr = ":8080"
 	gracehttp.Serve(echo.Server)
 	echo.Close()
-	//fmt.Print("clsoe")
 }

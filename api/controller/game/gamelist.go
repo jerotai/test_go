@@ -4,8 +4,15 @@ import (
         //"github.com/labstack/echo"
 )
 
+type GameList struct {
+}
 
-func GameList() {
+// new game list object
+func NewGameList() *GameList {
+        return &GameList{}
+}
 
-        return 111
+//game list object func
+func (s *GameList) List() string {
+        return "sa"
 }
