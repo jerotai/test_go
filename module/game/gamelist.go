@@ -2,6 +2,8 @@ package game
 
 import (
         //"github.com/labstack/echo"
+        "test_go/core/model/database/system"
+        "test_go/core/model/database/dto/site"
 )
 
 type GameList struct {
@@ -13,6 +15,6 @@ func NewGameList() *GameList {
 }
 
 //game list object func
-func (s *GameList) List() string {
-        return "sa"
+func (s *GameList) List() ([]*site.GameList) {
+        return system.GameList()
 }

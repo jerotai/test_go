@@ -18,14 +18,14 @@ func GetConn(dbName string) *sql.DB {
 }
 
 func createConn(dbName string) *sql.DB {
-        connStr := "Kdoctor_dev:kGalileiair_DEV@tcp(192.168.4.234:3306)/c4_site"
+        connStr := "Kdoctor_dev:kGalileiair_DEV@tcp(192.168.4.234:3306)/" + dbName
         db, err := sql.Open("mysql", connStr)
         if err != nil {
                 //logger.Fatal("Connect Database Failed", zap.Error(err), zap.String("connStr", connStr))
         }
 
-        //db.SetMaxOpenConns(100)
-        //db.SetMaxIdleConns(100)
-        //db.SetConnMaxLifetime(3600)
+        db.SetMaxOpenConns(100)
+        db.SetMaxIdleConns(100)
+        db.SetConnMaxLifetime(3600)
         return db
 }
