@@ -1,9 +1,8 @@
 package api
 
 import (
-	"test_go/api/router"
+	"routes/api/router"
 	"github.com/labstack/echo"
-	//"github.com/labstack/echo/middleware"
 	"github.com/facebookgo/grace/gracehttp"
 )
 

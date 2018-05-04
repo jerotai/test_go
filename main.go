@@ -1,6 +1,6 @@
 package main
 
-import "test_go/cmd"
+import "routes/cmd"
 
 func main() {
 	cmd.Execute()

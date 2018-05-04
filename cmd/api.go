@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"test_go/api"
+	"routes/api"
 
 	"github.com/spf13/cobra"
 )
@@ -11,7 +11,7 @@ func init() {
 }
 
 var apiCmd = &cobra.Command{
-	Use:   "api",
+	Use:   "ApiService",
 	Short: "Start api server",
 	Long:  `Start api server`,
 	Run: func(cmd *cobra.Command, args []string) {
