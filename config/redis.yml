@@ -1,0 +1,17 @@
+redis_info:
+  pool_size: 200
+  pool_timeout: 30
+  dial_timeout: 10
+  read_timeout: 10
+  write_timeout: 10
+site_list:
+  master:
+    host: "10.36.2.59"
+    port: 6000
+    password: ""
+    db: 0
+  slave:
+    host: "10.36.2.59"
+    port: 6000
+    password: ""
+    db: 0

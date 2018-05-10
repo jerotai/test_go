@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"encoding/json"
+	"strings"
 )
 
 type CurlBase struct {
@@ -51,9 +52,14 @@ func (inst CurlBase) warnErrorData(resObj interface{}) error {
 		}
 		message = s.Message
 	}*/
+	
 	return errors.New(message)
 }
 
+
+/**
+ * 送出 Get 請求
+ */
 func (inst CurlBase) Get(path string, params map[string]interface{}, resObj interface{}) error {
 	client := &http.Client{}
 	paramUri, err := combineParamUri(params)
@@ -77,7 +83,8 @@ func (inst CurlBase) Get(path string, params map[string]interface{}, resObj inte
 			),
 		)
 	}
-
+	
+	req.Header.Add("Content-Type", `application/json`)
 	//req.Header.Add("Authorization", inst.Auth)
 
 	res, err := client.Do(req)
@@ -121,5 +128,76 @@ func (inst CurlBase) Get(path string, params map[string]interface{}, resObj inte
 			),
 		)
 	}
+	return inst.warnErrorData(resObj)
+}
+
+
+/**
+ * 送出Post請求
+ */
+func (inst CurlBase) Post(path string, param map[string]interface{}, resObj interface{}) error {
+	apiUrl := inst.Url + path
+	client := &http.Client{}
+	paramUri, err := combineParamUri(param)
+	if err != nil {
+		return err
+	}
+	
+	req, err := http.NewRequest(http.MethodPost, apiUrl, strings.NewReader(paramUri))
+	if err != nil {
+		return errors.New(
+			fmt.Sprintf(
+				"Msg:%s api:%s err:%s",
+				"NewRequest Failed",
+				apiUrl,
+				err.Error(),
+			),
+		)
+	}
+	
+	req.Header.Add("Content-Type", `application/x-www-form-urlencoded`)
+	//req.Header.Add("Authorization", inst.Auth)
+	
+	res, err := client.Do(req)
+	if err != nil {
+		return errors.New(
+			fmt.Sprintf(
+				"Msg:%s api:%s err:%s",
+				"Send Request Failed",
+				apiUrl,
+				err.Error(),
+			),
+		)
+	}
+	//close connection
+	defer res.Body.Close()
+	
+	//read all response
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return errors.New(
+			fmt.Sprintf(
+				"Msg:%s api:%s err:%s",
+				"Read From body Failed",
+				apiUrl,
+				err.Error(),
+			),
+		)
+	}
+	
+	//Try Unmarshal Json
+	if err := json.Unmarshal(body, resObj); err != nil {
+		fmt.Println(err)
+		return errors.New(
+			fmt.Sprintf(
+				"Msg:%s API:%s Res:%s err:%s",
+				"Unmarshal Json Failed",
+				apiUrl,
+				string(body),
+				err.Error(),
+			),
+		)
+	}
+	
 	return inst.warnErrorData(resObj)
 }

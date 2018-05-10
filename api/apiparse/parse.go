@@ -2,11 +2,15 @@ package apiparse
 
 import (
 	"encoding/json"
-	"github.com/labstack/echo"
+	"routes/core/dto"
+	"net/http"
+	"routes/core/model/redis/domain"
+	"strings"
+	"reflect"
+	"errors"
+	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"routes/helper"
-	"routes/core/dto"
-	"fmt"
 )
 
 /**
@@ -16,40 +20,39 @@ func ApiResponse(req interface{}) interface{} {
 	statusReq := dto.ApiStatus{}
 	b, _ := json.Marshal(req)
 	
-	statusReq.Code = statusCodeParse("1")
+	//statusReq.Code = statusCodeParse("1")
 	statusReq.Result = string(b[:])
 	return statusReq
 }
 
-/*func buildQuery(c echo.Context) {
-	q := c.Request().URL.Query()
-	for k, v := range c.paramQuery {
-		q.Set(k, v)
-	}
-	c.RawQuery = q.Encode()
-}*/
 
-var m map[string]interface{}
-
-func GetJsonDataParse(c echo.Context, req interface{})  {
-	keys := c.Request().ParseForm
+/**
+ * 取得 API GET 參數
+ */
+func GetDataParse(g *gin.Context, apiDto interface{}) error {
+	datas := make(map[string]interface{})
 	
-	fmt.Println(keys)
-	/*for _, k := range q {
-		req.Set(k, v)
-	}*/
-	/*if err != nil {
+	for _, param := range g.Params {
+		datas[param.Key] = param.Value
+	}
+	
+	tmpJson, err := json.Marshal(datas)
+	
+	if err != nil {
 		//後續處理
-	}*/
-	/*for _, key := range c.ParamNames() {
-		fmt.Println(key)
-	}*/
-	//fmt.Println(req)
+	}
+	
+	json.Unmarshal([]byte(tmpJson), apiDto)
+	
+	return err
 }
 
-//取得 post 的參數
-func PostJsonDataParse(c echo.Context, req interface{}) error {
-	err := json.NewDecoder(c.Request().Body).Decode(&req)
+/**
+ * 取得 API POST 參數
+ */
+func PostDataParse(g *gin.Context, apiDto interface{}) error {
+	err := g.ShouldBind(apiDto)
+	
 	if err != nil {
 		//後續處理
 	}
@@ -57,48 +60,56 @@ func PostJsonDataParse(c echo.Context, req interface{}) error {
 	return err
 }
 
-//取得 rsa加密的post 參數
-func PostJsonRsaDataParse(c echo.Context, req interface{}) error {
-	body, err := ioutil.ReadAll(c.Request().Body)
+/**
+ * 取得 rsa加密的post 參數
+ */
+func PostRsaDataParse(g *gin.Context, apiDto interface{}) error {
+	body, err := ioutil.ReadAll(g.Request.Body)
+	
 	if err != nil {
 		//後續處理
 	}
-	
 	rsadecode, _ := helper.RsaDecrypt(body)
-	json.Unmarshal([]byte(rsadecode), &req)
+	json.Unmarshal([]byte(rsadecode), apiDto)
 	
 	return err
+}
+
+/**
+ * 將 dto Struct 轉換為 map interface
+ */
+func DtoToMapInterface(apiDto interface{}) (apiMap map[string]interface{}, err error) {
+	apiMap = make(map[string]interface{})
+	
+	if apiDto == nil {
+		err = errors.New("apiDto is nil")
+	}
+	
+	if t := reflect.TypeOf(apiDto); t.Kind() == reflect.Struct {
+		
+		v := reflect.ValueOf(apiDto)
+		
+		for i := 0; i < t.NumField(); i++ {
+			fv := t.Field(i)
+			tag := fv.Tag.Get("json")
+			apiMap[tag] = v.Field(i)
+		}
+	}
+	
+	err = errors.New("illegal input")
+	return
 }
 
 /**
  * 確認站台 Code
- * url := siteCodeParse(c.Request().Host)
+ * url := siteCodeParse(g.Request)
  */
-func SiteCodeParse(url string) string {
+func SiteCodeParse(g *http.Request) string {
+	domain_url := strings.Split(g.Host, ":")
+	
+	domain := domain.DomainsService()
+	domain.Init()
 
-	return "S1"
+	return domain.GetSiteCodeByDomain(domain_url[0])
 }
-
-/**
- api 錯誤碼整理
- */
-func statusCodeParse(status string) string {
-	statusCode := "1"
-	return statusCode
-}
-
-// getHost tries its best to return the request host.
-/*
-func getHost(r *http.Request) string {
-	if r.URL.IsAbs() {
-		host := r.Host
-		// Slice off any port information.
-		if i := strings.Index(host, ":"); i != -1 {
-			host = host[:i]
-		}
-		return host
-	}
-	return r.URL.Host
-}
-*/
 

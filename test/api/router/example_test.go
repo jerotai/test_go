@@ -2,18 +2,19 @@ package router
 
 import (
 	"testing"
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
 	"routes/api/router"
+	"github.com/gin-gonic/gin"
+	"github.com/gin-contrib/cors"
 )
 
 /**
  * Example route test
  */
 func TestInitExampleRouting(t *testing.T) {
-	e := echo.New()
-	e.Use(middleware.Recover())
-	e.Use(middleware.CORS())
+	gin.SetMode(gin.TestMode)
+	e := gin.New()
+	e.Use(gin.Recovery())
+	e.Use(cors.Default())
 	
 	//example routes
 	exampleGroup := e.Group("/example")
@@ -24,9 +25,10 @@ func TestInitExampleRouting(t *testing.T) {
  * rsa route test
  */
 func TestInitRsaRouting(t *testing.T) {
-	e := echo.New()
-	e.Use(middleware.Recover())
-	e.Use(middleware.CORS())
+	gin.SetMode(gin.TestMode)
+	e := gin.New()
+	e.Use(gin.Recovery())
+	e.Use(cors.Default())
 	
 	//rsa routes
 	rsaGroup := e.Group("/rsaExample")

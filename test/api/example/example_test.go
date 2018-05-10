@@ -3,12 +3,11 @@ package example
 import (
 	"testing"
 	"net/http/httptest"
-	"github.com/labstack/echo"
 	"net/http"
 	"routes/api/example"
 	"strings"
 	"routes/helper"
-	"github.com/stretchr/testify/assert"
+	"github.com/gin-gonic/gin"
 )
 
 var (
@@ -19,59 +18,86 @@ var (
 /**
  * 測試 GET Info
  */
-func TestGetInfo(t *testing.T) {
-	e := echo.New()
-	req := httptest.NewRequest(echo.GET, "/example/", nil)
-	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-	rec := httptest.NewRecorder()
-	c := e.NewContext(req, rec)
-	c.SetPath("/example/:id/:name")
-	c.SetParamNames("id", "name")
-	c.SetParamValues("111", "Jon Snow")
+func TestGet(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+
+	w := httptest.NewRecorder()
+	_, r := gin.CreateTestContext(w)
 	
 	ex := &example.Example{}
-	if assert.NoError(t, ex.GetInfo(c)) {
-		assert.Equal(t, http.StatusOK, rec.Code)
-		assert.Equal(t, reExampleJSOM, rec.Body.String())
+	
+	r.GET("/example/:id/:name", ex.GetInfo)
+	req, err := http.NewRequest("GET", "/example/1234/test", nil)
+	
+	if err != nil {
+		t.Fatalf("TestGet NewRequest Error : %v", err)
+	}
+	
+	req.Header.Set("Content-Type", "application/json")
+	req.Host = "CQ1.admin.com"
+	
+	r.ServeHTTP(w, req)
+	
+	if w.Code != http.StatusOK {
+		t.Fatalf("TestGet ServeHTTP Error : %v", err)
 	}
 }
 
 /**
  *測試 POST
  */
+
 func TestPost(t *testing.T) {
-	e := echo.New()
-	req := httptest.NewRequest(echo.POST, "/example", strings.NewReader(exampleJSOM))
-	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-	rec := httptest.NewRecorder()
+	gin.SetMode(gin.TestMode)
 	
-	c := e.NewContext(req, rec)
+	w := httptest.NewRecorder()
+	_, r := gin.CreateTestContext(w)
 	
 	ex := &example.Example{}
 	
-	if assert.NoError(t, ex.Post(c)) {
-		assert.Equal(t, http.StatusOK, rec.Code)
-		assert.Equal(t, reExampleJSOM, rec.Body.String())
+	r.POST("/example", ex.Post)
+	req, err := http.NewRequest("POST", "/example", strings.NewReader(exampleJSOM))
+	
+	if err != nil {
+		t.Fatalf("TestPost NewRequest Error : %v", err)
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Host = "CQ1.admin.com"
+	
+	r.ServeHTTP(w, req)
+	
+	if w.Code != http.StatusOK {
+		t.Fatalf("TestPost ServeHTTP Error : %v", err)
 	}
 }
 
 /**
  * 測試 RSA POST
  */
+
 func TestRsa(t *testing.T) {
 	rsaData, _ := helper.RsaEncrypt(exampleJSOM)
+	gin.SetMode(gin.TestMode)
 	
-	e := echo.New()
-	req := httptest.NewRequest(echo.POST, "/rsaExample", strings.NewReader(string(rsaData)))
-	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-	rec := httptest.NewRecorder()
-	
-	c := e.NewContext(req, rec)
+	w := httptest.NewRecorder()
+	_, r := gin.CreateTestContext(w)
 	
 	ex := &example.Rsa{}
 	
-	if assert.NoError(t, ex.RsaPost(c)) {
-		assert.Equal(t, http.StatusOK, rec.Code)
-		assert.Equal(t, reExampleJSOM, rec.Body.String())
+	r.POST("/rsaExample/Gin", ex.RsaPost)
+	req, err := http.NewRequest("POST", "/rsaExample/Gin", strings.NewReader(string(rsaData)))
+	
+	if err != nil {
+		t.Fatalf("TestRsa NewRequest Error : %v", err)
+	}
+	
+	req.Header.Set("Content-Type", "application/json")
+	req.Host = "CQ1.admin.com"
+	
+	r.ServeHTTP(w, req)
+	
+	if w.Code != http.StatusOK {
+		t.Fatalf("TestRsa ServeHTTP Error : %v", err)
 	}
 }

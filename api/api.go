@@ -1,9 +1,8 @@
 package api
 
 import (
+	"github.com/gin-gonic/gin"
 	"routes/api/router"
-	"github.com/labstack/echo"
-	"github.com/facebookgo/grace/gracehttp"
 )
 
 type APIService struct {
@@ -17,9 +16,14 @@ func NewApiService() *APIService {
  * 啟動API服務
  */
 func (s *APIService) Start() {
-	echo := echo.New()
+	/*echo := echo.New()
 	router.InitRouting(echo)
 	echo.Server.Addr = ":8080"
 	gracehttp.Serve(echo.Server)
-	echo.Close()
+	echo.Close()*/
+	//gin.SetMode(gin.ReleaseMode)
+	g := gin.New()
+	router.InitRouting(g)
+	
+	g.Run()
 }
