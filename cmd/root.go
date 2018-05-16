@@ -8,7 +8,7 @@ import (
 )
 
 var RootCmd = &cobra.Command{
-	Use:   "",
+	Use:   "RootCmd",
 	Short: "golang practice project",
 	Long:  `A simple golang framework to practice golang.`,
 	Run: func(cmd *cobra.Command, args []string) {

@@ -2,10 +2,10 @@ package example
 
 import (
 	"net/http"
-	"routes/core/dto"
-	"routes/api/apiparse"
 	"github.com/gin-gonic/gin"
 	"fmt"
+	"Stingray/core/dto"
+	"Stingray/api/apiparse"
 )
 
 type (
@@ -29,7 +29,7 @@ func (ex *Example) GetInfo(g *gin.Context) {
 	
 	//get site code
 	req.SiteCode = apiparse.SiteCodeParse(g.Request)
-	fmt.Println(req)
+	fmt.Println("GetInfo", req)
 	g.JSON(200, req)
 }
 
@@ -39,6 +39,7 @@ func (ex *Example) GetInfo(g *gin.Context) {
 func (ex *Rsa) RsaPost(g *gin.Context) {
 	req := dto.ExampleList{}
 	apiparse.PostRsaDataParse(g, &req)
+	fmt.Println("RsaPost", req)
 	g.JSON(200, req)
 }
 
@@ -48,42 +49,6 @@ func (ex *Rsa) RsaPost(g *gin.Context) {
 func (ex *Example) Post(g *gin.Context) {
 	req := dto.ExampleList{}
 	apiparse.PostDataParse(g, &req)
-	fmt.Println(req)
+	fmt.Println("Post", req)
 	g.JSON(200, req)
 }
-
-/**
- * echo api get 範例
- */
-/*
-func (ex *Example) GetInfoByEcho(c echo.Context) error {
-	req := dto.ExampleList{}
-	//req.Id = c.Param("id")
-	//req.Name = c.Param("name")
-	apiparse.GetJsonDataParse(c, &req)
-	return c.JSON(http.StatusOK, apiparse.ApiResponse(req))
-}
-*/
-
-/**
- * echo api post 範例
- */
-/*
-func (ex *Example) PostByEcho(c echo.Context) error {
-	req := dto.ExampleList{}
-	apiparse.PostDataParse(c, &req)
-	return c.JSON(http.StatusOK, apiparse.ApiResponse(req))
-}
-*/
-
-/**
- * echo api rsa post 範例
- */
-/*
-func (ex *Rsa) RsaPostByEcho(c echo.Context) error {
-	req := dto.ExampleList{}
-	apiparse.PostRsaDataParse(c, &req)
-	return c.JSON(http.StatusOK, apiparse.ApiResponse(req))
-}
-*/
-

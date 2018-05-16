@@ -4,8 +4,8 @@ import (
 	"testing"
 	
 	//"github.com/spf13/viper"
-	//"routes/helper"
-	"routes/helper"
+	//"Stingray/helper"
+	"Stingray/helper"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 )

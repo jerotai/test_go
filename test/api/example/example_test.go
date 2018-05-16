@@ -4,15 +4,15 @@ import (
 	"testing"
 	"net/http/httptest"
 	"net/http"
-	"routes/api/example"
 	"strings"
-	"routes/helper"
 	"github.com/gin-gonic/gin"
+	"Stingray/api/example"
+	"Stingray/helper"
 )
 
 var (
-	exampleJSOM = `{"id":"111","name":"Jon Snow"}`
-	reExampleJSOM = `{"code":"1","result":"{\"id\":\"111\",\"name\":\"Jon Snow\"}"}`
+	exampleJSOM = `{"id":"123","name":"asd"}`
+	reExampleJSOM = `{"code":"1","result":"{\"id\":\"123\",\"name\":\"asd\"}"}`
 )
 
 /**
@@ -78,15 +78,16 @@ func TestPost(t *testing.T) {
 
 func TestRsa(t *testing.T) {
 	rsaData, _ := helper.RsaEncrypt(exampleJSOM)
-	gin.SetMode(gin.TestMode)
 	
+	gin.SetMode(gin.TestMode)
 	w := httptest.NewRecorder()
 	_, r := gin.CreateTestContext(w)
 	
 	ex := &example.Rsa{}
 	
 	r.POST("/rsaExample/Gin", ex.RsaPost)
-	req, err := http.NewRequest("POST", "/rsaExample/Gin", strings.NewReader(string(rsaData)))
+	req, err := http.NewRequest("POST", "/rsaExample/Gin", strings.NewReader(rsaData))
+	req.Header.Set("Content-Type", "application/json")
 	
 	if err != nil {
 		t.Fatalf("TestRsa NewRequest Error : %v", err)

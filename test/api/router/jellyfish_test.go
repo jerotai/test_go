@@ -2,7 +2,7 @@ package router
 
 import (
 	"testing"
-	"routes/api/router"
+	"Stingray/api/router"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/cors"
 )

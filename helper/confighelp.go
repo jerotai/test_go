@@ -4,8 +4,9 @@ import (
 	"github.com/spf13/viper"
 	"fmt"
 	"time"
-	"path"
+	"os"
 	"runtime"
+	"path"
 )
 
 type redisConf struct {
@@ -23,13 +24,26 @@ type redisSettingConf struct {
 	PoolTimeout time.Duration
 }
 
+/**
+ * 取得設定檔路徑
+ */
 func helperPath() string {
-	_, filename, _, ok := runtime.Caller(0)
-	if !ok {
-		panic("No caller information")
+	confPath := ""
+	if os.Getenv("ConfPath") == "" {
+		_, filename, _, ok := runtime.Caller(0)
+		if !ok {
+			panic("No caller information")
+		}
+		confPath = path.Dir(filename) + "/../config"
+	} else {
+		confPath = os.Getenv("ConfPath")
 	}
 	
-	return path.Dir(filename)
+	return confPath
+}
+
+func CookieFilePath() string {
+	return  helperPath() + "/cookie_file"
 }
 
 /**
@@ -37,7 +51,7 @@ func helperPath() string {
  */
 func RedisConf(name string, ctype string) *redisConf {
 	viper.SetConfigName("redis")
-	viper.AddConfigPath(helperPath() + "/../config/")
+	viper.AddConfigPath(helperPath())
 	err := viper.ReadInConfig()
 	
 	if err != nil {
@@ -61,7 +75,7 @@ func RedisConf(name string, ctype string) *redisConf {
  */
 func RedisSettingConf() *redisSettingConf {
 	viper.SetConfigName("redis")
-	viper.AddConfigPath(helperPath() + "/../config/")
+	viper.AddConfigPath(helperPath())
 	err := viper.ReadInConfig()
 	
 	if err != nil {
@@ -86,7 +100,7 @@ func RedisSettingConf() *redisSettingConf {
  */
 func RsaPrivateKey() string {
 	viper.SetConfigName("rsa")
-	viper.AddConfigPath(helperPath() + "/../config/")
+	viper.AddConfigPath(helperPath())
 	
 	if err := viper.ReadInConfig(); err == nil {
 		//fmt.Println("Using config file:", viper.ConfigFileUsed())
@@ -100,8 +114,7 @@ func RsaPrivateKey() string {
  */
 func RsaPublicKey() string {
 	viper.SetConfigName("rsa")
-	viper.AddConfigPath(helperPath() + "/../config/")
-	
+	viper.AddConfigPath(helperPath())
 	if err := viper.ReadInConfig(); err == nil {
 		//fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
@@ -116,7 +129,7 @@ type ApiSettingConf struct {
 
 func ApiSetting(name string) *ApiSettingConf {
 	viper.SetConfigName("apisetting")
-	viper.AddConfigPath(helperPath() + "/../config/")
+	viper.AddConfigPath(helperPath())
 	
 	if err := viper.ReadInConfig(); err == nil {
 		//fmt.Println("Using config file:", viper.ConfigFileUsed())

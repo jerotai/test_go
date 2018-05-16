@@ -1,7 +1,7 @@
 package model
 
 import (
-	"routes/core/model"
+	"Stingray/core/model"
 	
 	"testing"
 	"fmt"

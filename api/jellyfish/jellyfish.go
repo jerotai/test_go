@@ -1,12 +1,13 @@
 package jellyfish
 
 import (
-	"routes/helper"
+	"Stingray/helper"
 )
 
 type (
 	// JellyFish 建構子
 	JellyFish struct {
+		//SendCurl *helper.CurlBase
 		SendCurl *helper.CurlBase
 	}
 )

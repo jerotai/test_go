@@ -5,43 +5,39 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http/httptest"
 	"strings"
-	"routes/api/jellyfish"
+	"Stingray/api/jellyfish"
 	"net/http"
-	"routes/helper"
-	"github.com/magiconair/properties/assert"
+	"Stingray/helper"
 )
 
 var (
-	loginJson = `{"account":"test","password":"1234567890"}`
-	chekcLoginJson = `{"account":"test","password":"1234567890","hall_code":"CQ1"}`
+	loginJson = `{"account":"CQ1_admin","password":"1234567890","hall_code":"CQ1"}`
+	chekcLoginJson = `{"account":"CQ1_admin","password":"1234567890","hall_code":"CQ1"}`
 )
 
 /**
  *測試 Login
  */
 func TestLogin(t *testing.T) {
-	rsaData, _ := helper.RsaEncrypt(loginJson)
-	
 	gin.SetMode(gin.TestMode)
 	
 	w := httptest.NewRecorder()
 	_, r := gin.CreateTestContext(w)
 	
 	ex := jellyfish.New()
-	ex.SendCurl = &helper.CurlBase{}
+	ex.SendCurl = helper.NewCurlBase()
 	apiConf := helper.ApiSetting("JellyFishService")
 	ex.SendCurl.Url = apiConf.Host + ":" + apiConf.Port + "/"
 	
-	
 	r.POST("/login", ex.Login)
-	req, err := http.NewRequest("POST", "/login", strings.NewReader(string(rsaData)))
+	req, err := http.NewRequest(http.MethodPost, "/login", strings.NewReader(loginJson))
 	
 	if err != nil {
 		t.Fatalf("TestLogin NewRequest Error : %v", err)
 	}
 	
-	req.Header.Set("Content-Type", "application/json")
-	req.Host = "CQ1.admin.com"
+	req.Header.Set("Content-Type", "multipart/form-data")
+	req.Header.Set("Origin", "http://CQ1.admin.com:8080")
 	
 	r.ServeHTTP(w, req)
 	

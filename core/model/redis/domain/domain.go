@@ -2,7 +2,7 @@ package domain
 
 import (
 	"github.com/go-redis/redis"
-	"routes/core/model"
+	"Stingray/core/model"
 )
 
 type Domain struct {
@@ -14,5 +14,5 @@ func DomainsService() (domain *Domain) {
 }
 
 func (d *Domain) Init() {
-	d.data_connect, _ = model.NeqwRedisConn().GetSiteListMasterConnect()
+	d.data_connect, _ = model.NewRedisConn().GetSiteListMasterConnect()
 }

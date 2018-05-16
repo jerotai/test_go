@@ -1,19 +1,54 @@
 package helper
 
 import (
-	//"reflect"
-	//"routes/core/dto"
-	"errors"
 	"net/http"
 	"net/url"
-	"fmt"
 	"io/ioutil"
-	"encoding/json"
 	"strings"
+	"fmt"
+	"errors"
 )
 
 type CurlBase struct {
+	cookies []*http.Cookie
+	client *http.Client
+	ApiToken string
 	Url  string
+}
+
+//初始化
+func NewCurlBase() *CurlBase {
+	hc := &CurlBase{}
+	hc.client = &http.Client{}
+	//为所有重定向的请求增加cookie
+	hc.client.CheckRedirect = func(req *http.Request, via []*http.Request) error {
+		if len(via) > 0 {
+			for _,v := range hc.GetCookie() {
+				req.AddCookie(v)
+			}
+		}
+		return nil
+	}
+	return hc
+}
+
+//设置代理地址
+func (self *CurlBase) SetProxyUrl(proxyUrl string)  {
+	proxy := func(_ *http.Request) (*url.URL, error) {
+		return url.Parse(proxyUrl)
+	}
+	transport := &http.Transport{Proxy:proxy}
+	self.client.Transport = transport
+}
+
+//设置请求cookie
+func (self *CurlBase) AddCookie(cookies []*http.Cookie)  {
+	self.cookies = append(self.cookies, cookies...)
+}
+
+//获取当前所有的cookie
+func (self *CurlBase) GetCookie() ([]*http.Cookie) {
+	return self.cookies
 }
 
 // CombineParamUri
@@ -24,180 +59,209 @@ func combineParamUri(param map[string]interface{}) (string, error) {
 	if param == nil {
 		return "", nil
 	}
-
+	
 	u := url.URL{}
-
+	
 	//add paramter
 	query := u.Query()
 	for k, v := range param {
 		query.Set(k, fmt.Sprint(v))
 	}
-
+	
 	return query.Encode(), nil
 }
 
-// warnErrorData
-//
-// 當API回傳的code != 0時，代表有異常發生
-// 外部收到error後再依照error code做對應處理
-func (inst CurlBase) warnErrorData(resObj interface{}) error {
-
-	var message string
-	/*if t := reflect.ValueOf(resObj); t.Kind() == reflect.Ptr {
-		// 外部傳入的interface是 ** 所以要Elem兩次
-		f := t.Elem().Elem().FieldByName("Status")
-		s := f.Interface().(dto.Status)
-		if s.Code == "0" {
-			return nil
-		}
-		message = s.Message
-	}*/
-	
-	return errors.New(message)
-}
-
-
-/**
- * 送出 Get 請求
- */
-func (inst CurlBase) Get(path string, params map[string]interface{}, resObj interface{}) error {
-	client := &http.Client{}
+func (self *CurlBase) Get(requestUrl string, params map[string]interface{}) ([]byte, int, error) {
 	paramUri, err := combineParamUri(params)
-
+	
 	if err != nil {
-		return err
-	}
-	fmt.Println(paramUri)
-
-	apiUrl := inst.Url + path + "?" + paramUri
-
-	req, err := http.NewRequest(http.MethodGet, apiUrl, nil)
-
-	if err != nil {
-		return errors.New(
-			fmt.Sprintf(
-				"Msg:%s api:%s err:%s",
-				"NewRequest Failed",
-				apiUrl,
-				err.Error(),
-			),
-		)
+		return nil, http.StatusOK, err
 	}
 	
-	req.Header.Add("Content-Type", `application/json`)
-	//req.Header.Add("Authorization", inst.Auth)
-
-	res, err := client.Do(req)
+	apiUrl := self.Url + requestUrl + "?" + paramUri
+	
+	request, err := http.NewRequest("GET", apiUrl, nil)
+	request.Header.Add("Api-Token", self.ApiToken)
 	if err != nil {
-		return errors.New(
-			fmt.Sprintf(
-				"Msg:%s api:%s err:%s",
-				"Send Request Failed",
-				apiUrl,
-				err.Error(),
-			),
+		errStr := fmt.Sprintf(
+			"Msg:%s api:%s err:%s",
+			"NewRequest Failed",
+			apiUrl,
+			err.Error(),
 		)
+		return nil, http.StatusOK, errors.New(errStr)
 	}
-
-	//close connection
-	defer res.Body.Close()
-
-	//read all response
-	body, err := ioutil.ReadAll(res.Body)
+	
+	self.setRequestCookie(request)
+	response,_ := self.client.Do(request)
+	self.setRequestCookie(request)
+	request.Header.Add("Api-Token", self.ApiToken)
+	defer response.Body.Close()
+	
+	data, err := ioutil.ReadAll(response.Body)
+	
 	if err != nil {
-		return errors.New(
-			fmt.Sprintf(
-				"Msg:%s api:%s err:%s",
-				"Read From body Failed",
-				apiUrl,
-				err.Error(),
-			),
+		errStr := fmt.Sprintf(
+			"Msg:%s api:%s err:%s",
+			"Read From body Failed",
+			apiUrl,
+			err.Error(),
 		)
+		return nil, http.StatusOK, errors.New(errStr)
 	}
-
-	//Try Unmarshal Json
-	err = json.Unmarshal(body, resObj)
-	if err != nil {
-		return errors.New(
-			fmt.Sprintf(
-				"Msg:%s API:%s Res:%s err:%s",
-				"Unmarshal Json Failed",
-				apiUrl,
-				string(body),
-				err.Error(),
-			),
-		)
-	}
-	return inst.warnErrorData(resObj)
+	
+	return data, response.StatusCode, err
 }
 
 
-/**
- * 送出Post請求
- */
-func (inst CurlBase) Post(path string, param map[string]interface{}, resObj interface{}) error {
-	apiUrl := inst.Url + path
-	client := &http.Client{}
-	paramUri, err := combineParamUri(param)
+func (self *CurlBase) Post(requestUrl string, params map[string]interface{}) ([]byte, int, error) {
+	postData := self.encodeParams(params)
+	apiUrl := self.Url + requestUrl
+	
+	request, err := http.NewRequest("POST", apiUrl, strings.NewReader(postData))
 	if err != nil {
-		return err
+		errStr := fmt.Sprintf(
+			"Msg:%s api:%s err:%s",
+			"NewRequest Failed",
+			apiUrl,
+			err.Error(),
+		)
+		return nil, http.StatusOK, errors.New(errStr)
 	}
 	
-	req, err := http.NewRequest(http.MethodPost, apiUrl, strings.NewReader(paramUri))
+	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	request.Header.Add("Api-Token", self.ApiToken)
+	self.setRequestCookie(request)
+	
+	response, err := self.client.Do(request)
+	
 	if err != nil {
-		return errors.New(
-			fmt.Sprintf(
-				"Msg:%s api:%s err:%s",
-				"NewRequest Failed",
-				apiUrl,
-				err.Error(),
-			),
+		errStr := fmt.Sprintf(
+			"Msg:%s api:%s err:%s",
+			"client.Do Failed",
+			apiUrl,
+			err.Error(),
 		)
+		
+		return nil, http.StatusOK, errors.New(errStr)
 	}
 	
-	req.Header.Add("Content-Type", `application/x-www-form-urlencoded`)
-	//req.Header.Add("Authorization", inst.Auth)
+	defer response.Body.Close()
 	
-	res, err := client.Do(req)
+	//保存 cookie
+	respCks := response.Cookies()
+	self.cookies = append(self.cookies, respCks...)
+	
+	data, err := ioutil.ReadAll(response.Body)
+	
 	if err != nil {
-		return errors.New(
-			fmt.Sprintf(
-				"Msg:%s api:%s err:%s",
-				"Send Request Failed",
-				apiUrl,
-				err.Error(),
-			),
+		errStr := fmt.Sprintf(
+			"Msg:%s api:%s err:%s",
+			"Read From body Failed",
+			apiUrl,
+			err.Error(),
 		)
+		return nil, http.StatusOK, errors.New(errStr)
 	}
-	//close connection
-	defer res.Body.Close()
 	
-	//read all response
-	body, err := ioutil.ReadAll(res.Body)
+	return data, response.StatusCode, err
+}
+
+func (self *CurlBase) Put(requestUrl string, params map[string]interface{}) ([]byte, int, error) {
+	postData := self.encodeParams(params)
+	apiUrl := self.Url + requestUrl
+	request, err := http.NewRequest("PUT", apiUrl, strings.NewReader(postData))
 	if err != nil {
-		return errors.New(
-			fmt.Sprintf(
-				"Msg:%s api:%s err:%s",
-				"Read From body Failed",
-				apiUrl,
-				err.Error(),
-			),
+		errStr := fmt.Sprintf(
+			"Msg:%s api:%s err:%s",
+			"NewRequest Failed",
+			apiUrl,
+			err.Error(),
 		)
+		return nil, http.StatusOK, errors.New(errStr)
 	}
 	
-	//Try Unmarshal Json
-	if err := json.Unmarshal(body, resObj); err != nil {
-		fmt.Println(err)
-		return errors.New(
-			fmt.Sprintf(
-				"Msg:%s API:%s Res:%s err:%s",
-				"Unmarshal Json Failed",
-				apiUrl,
-				string(body),
-				err.Error(),
-			),
+	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	request.Header.Add("Api-Token", self.ApiToken)
+	self.setRequestCookie(request)
+	
+	response, err := self.client.Do(request)
+	defer response.Body.Close()
+	
+	//保存响应的 cookie
+	respCks := response.Cookies()
+	self.cookies = append(self.cookies, respCks...)
+	
+	data, err := ioutil.ReadAll(response.Body)
+	
+	if err != nil {
+		errStr := fmt.Sprintf(
+			"Msg:%s api:%s err:%s",
+			"Read From body Failed",
+			apiUrl,
+			err.Error(),
 		)
+		return nil, http.StatusOK, errors.New(errStr)
 	}
 	
-	return inst.warnErrorData(resObj)
+	return data, response.StatusCode, err
+}
+
+func (self *CurlBase) Delete(requestUrl string, params map[string]interface{}) ([]byte, int, error) {
+	postData := self.encodeParams(params)
+	apiUrl := self.Url + requestUrl
+	request, err := http.NewRequest("DELETE", apiUrl, strings.NewReader(postData))
+	if err != nil {
+		errStr := fmt.Sprintf(
+			"Msg:%s api:%s err:%s",
+			"NewRequest Failed",
+			apiUrl,
+			err.Error(),
+		)
+		return nil, http.StatusOK, errors.New(errStr)
+	}
+	
+	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	request.Header.Add("Api-Token", self.ApiToken)
+	self.setRequestCookie(request)
+	
+	response, err := self.client.Do(request)
+	defer response.Body.Close()
+	
+	//保存响应的 cookie
+	respCks := response.Cookies()
+	self.cookies = append(self.cookies, respCks...)
+	
+	data, err := ioutil.ReadAll(response.Body)
+	
+	if err != nil {
+		errStr := fmt.Sprintf(
+			"Msg:%s api:%s err:%s",
+			"Read From body Failed",
+			apiUrl,
+			err.Error(),
+		)
+		return nil, http.StatusOK, errors.New(errStr)
+	}
+	
+	return data, response.StatusCode, err
+}
+
+func (self *CurlBase) setRequestCookie(request *http.Request)  {
+	for _,v := range self.cookies{
+		request.AddCookie(v)
+	}
+}
+
+
+func (self *CurlBase) encodeParams(params map[string]interface{}) string {
+	u := url.URL{}
+	
+	//add paramter
+	query := u.Query()
+	for k, v := range params {
+		query.Set(k, fmt.Sprint(v))
+	}
+	
+	return query.Encode()
 }

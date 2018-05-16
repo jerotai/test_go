@@ -2,7 +2,7 @@ package model
 
 import (
 	"github.com/go-redis/redis"
-	"routes/helper"
+	"Stingray/helper"
 	"time"
 	"fmt"
 )
@@ -10,7 +10,7 @@ import (
 type RedisConnect struct {
 }
 
-func NeqwRedisConn() (*RedisConnect) {
+func NewRedisConn() (*RedisConnect) {
 	return &RedisConnect{}
 }
 

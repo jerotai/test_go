@@ -2,7 +2,7 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	"routes/api/router"
+	"Stingray/api/router"
 )
 
 type APIService struct {
@@ -25,5 +25,5 @@ func (s *APIService) Start() {
 	g := gin.New()
 	router.InitRouting(g)
 	
-	g.Run()
+	g.Run(":8082")
 }

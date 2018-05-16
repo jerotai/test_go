@@ -2,15 +2,16 @@ package apiparse
 
 import (
 	"encoding/json"
-	"routes/core/dto"
 	"net/http"
-	"routes/core/model/redis/domain"
 	"strings"
 	"reflect"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
-	"routes/helper"
+	"Stingray/core/model/redis/domain"
+	"Stingray/core/dto"
+	"Stingray/helper"
+	"fmt"
 )
 
 /**
@@ -31,7 +32,6 @@ func ApiResponse(req interface{}) interface{} {
  */
 func GetDataParse(g *gin.Context, apiDto interface{}) error {
 	datas := make(map[string]interface{})
-	
 	for _, param := range g.Params {
 		datas[param.Key] = param.Value
 	}
@@ -41,7 +41,6 @@ func GetDataParse(g *gin.Context, apiDto interface{}) error {
 	if err != nil {
 		//後續處理
 	}
-	
 	json.Unmarshal([]byte(tmpJson), apiDto)
 	
 	return err
@@ -51,11 +50,14 @@ func GetDataParse(g *gin.Context, apiDto interface{}) error {
  * 取得 API POST 參數
  */
 func PostDataParse(g *gin.Context, apiDto interface{}) error {
-	err := g.ShouldBind(apiDto)
+	body, err := ioutil.ReadAll(g.Request.Body)
 	
 	if err != nil {
+		fmt.Println()
 		//後續處理
 	}
+	//rsadecode, _ := helper.RsaDecrypt(body)
+	json.Unmarshal(body, apiDto)
 	
 	return err
 }
@@ -70,7 +72,8 @@ func PostRsaDataParse(g *gin.Context, apiDto interface{}) error {
 		//後續處理
 	}
 	rsadecode, _ := helper.RsaDecrypt(body)
-	json.Unmarshal([]byte(rsadecode), apiDto)
+
+	json.Unmarshal(rsadecode, apiDto)
 	
 	return err
 }
@@ -105,11 +108,15 @@ func DtoToMapInterface(apiDto interface{}) (apiMap map[string]interface{}, err e
  * url := siteCodeParse(g.Request)
  */
 func SiteCodeParse(g *http.Request) string {
-	domain_url := strings.Split(g.Host, ":")
 	
-	domain := domain.DomainsService()
-	domain.Init()
-
-	return domain.GetSiteCodeByDomain(domain_url[0])
+	if g.Header.Get("origin") != "" {
+		domain_url := strings.Split(g.Header.Get("origin"), "://")
+		domain := domain.DomainsService()
+		domain.Init()
+		domainUrl := strings.Split(domain_url[1], ":")[0]
+		return domain.GetSiteCodeByDomain(domainUrl)
+	}
+	
+	return "CQ1"
 }
 

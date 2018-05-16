@@ -1,11 +1,9 @@
 package jellyfish
 
-
 import (
-	"net/http"
 	"github.com/gin-gonic/gin"
-	"routes/core/dto"
-	"routes/api/apiparse"
+	"Stingray/core/dto"
+	"Stingray/api/apiparse"
 )
 
 /**
@@ -13,21 +11,19 @@ import (
  */
 func (j *JellyFish) Login(g *gin.Context) {
 	inputDto := dto.Login{}
-	apiparse.PostRsaDataParse(g, &inputDto)
+	apiparse.PostDataParse(g, &inputDto)
 	
 	//get hall code
 	inputDto.HallCode = apiparse.SiteCodeParse(g.Request)
 	sendParams, _ := apiparse.DtoToMapInterface(inputDto)
 	
-	response := &dto.LoginResponse{}
-	
 	//call jellyFish service api
-	err := j.SendCurl.Post("login", sendParams, &response)
+	body, httpStatus, err := j.SendCurl.Post("login", sendParams)
 	
 	if err != nil {
 		//todo 錯誤處理
 	}
 	
-	g.JSON(http.StatusOK, inputDto)
+	g.String(httpStatus, string(body))
 }
 

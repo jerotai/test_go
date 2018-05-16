@@ -5,21 +5,27 @@ import (
 	"crypto/x509"
 	"crypto/rsa"
 	"crypto/rand"
+	"encoding/base64"
 	"errors"
 )
 
 // 加密
-func RsaEncrypt(origData string) ([]byte, error) {
+func RsaEncrypt(origData string) (string, error) {
 	block, _ := pem.Decode([]byte(RsaPublicKey()))
 	if block == nil {
-		return nil, errors.New("public key error")
+		errors.New("public key error")
 	}
 	pubInterface, err := x509.ParsePKIXPublicKey(block.Bytes)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 	pub := pubInterface.(*rsa.PublicKey)
-	return rsa.EncryptPKCS1v15(rand.Reader, pub, []byte(origData))
+	rsaEnode, err := rsa.EncryptPKCS1v15(rand.Reader, pub, []byte(origData))
+	
+	if err != nil {
+		return "", err
+	}
+	return base64.StdEncoding.EncodeToString(rsaEnode), nil
 }
 
 // 解密
@@ -32,5 +38,11 @@ func RsaDecrypt(ciphertext []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	return rsa.DecryptPKCS1v15(rand.Reader, priv, ciphertext)
+	
+	signed, err := base64.StdEncoding.DecodeString(string(ciphertext))
+	if err != nil {
+		return nil, err
+	}
+	
+	return rsa.DecryptPKCS1v15(rand.Reader, priv, signed)
 }
