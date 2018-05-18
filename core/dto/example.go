@@ -1,7 +1,7 @@
 package dto
 
 type ExampleList struct {
-	SiteCode string `json:"site_code"`
-	Id string `json:"id"`
-	Name string `json:"name"`
+	StationCode string `json:"site_code"`
+	Id          string `json:"id"`
+	Name        string `json:"name"`
 }

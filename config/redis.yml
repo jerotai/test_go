@@ -15,3 +15,14 @@ site_list:
     port: 6000
     password: ""
     db: 0
+rsa_key:
+  master:
+    host: "10.36.2.59"
+    port: 6100
+    password: ""
+    db: 0
+  slave:
+    host: "10.36.2.59"
+    port: 6100
+    password: ""
+    db: 0

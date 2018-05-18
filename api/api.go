@@ -3,6 +3,7 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	"Stingray/api/router"
+	"github.com/gin-contrib/cors"
 )
 
 type APIService struct {
@@ -16,14 +17,22 @@ func NewApiService() *APIService {
  * 啟動API服務
  */
 func (s *APIService) Start() {
-	/*echo := echo.New()
-	router.InitRouting(echo)
-	echo.Server.Addr = ":8080"
-	gracehttp.Serve(echo.Server)
-	echo.Close()*/
-	//gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gin.ReleaseMode)
 	g := gin.New()
-	router.InitRouting(g)
+	g.Use(gin.Recovery())
+	g.Use(gin.Logger())
+	g.Use(cors.Default())
+	
+	ginGroup := g.Group("/example")
+	router.InitExampleRouting(ginGroup)
+	
+	//rsa routes
+	exampleGroup := g.Group("/rsaExample")
+	router.InitRsaExampleRouting(exampleGroup)
+	
+	//jellyfish routes
+	jellyfishGroup := g.Group("/")
+	router.InitJellyFishRouting(jellyfishGroup)
 	
 	g.Run(":8082")
 }

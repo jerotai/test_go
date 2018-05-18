@@ -37,6 +37,20 @@ func (r *RedisConnect) GetSiteListSlaveConnect() (*redis.Client, error) {
 }
 
 /**
+ * 取得 Rsa Key Master Connect
+ */
+func (r *RedisConnect) GetRsaKeyMasterConnect() (*redis.Client, error) {
+	return r.connect("rsa_key", "master")
+}
+
+/**
+ * 取得 Rsa Key Slave Connect
+ */
+func (r *RedisConnect) GetRsaKeySlaveConnect() (*redis.Client, error) {
+	return r.connect("rsa_key", "slave")
+}
+
+/**
  * 取得 redis connect
  */
 func (r *RedisConnect) connect(name string, ctype string) (*redis.Client, error) {

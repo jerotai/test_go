@@ -20,7 +20,7 @@ func InitExampleRouting(exampleGroup *gin.RouterGroup) {
 /**
  * 初始化 RSA 路由
  */
-func InitRsaRouting(rsaGroup *gin.RouterGroup) {
+func InitRsaExampleRouting(rsaGroup *gin.RouterGroup) {
 	e := &example.Rsa{}
 	
 	rsaGroup.POST(("/"), e.RsaPost)

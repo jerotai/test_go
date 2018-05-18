@@ -20,7 +20,7 @@ type CurlBase struct {
 func NewCurlBase() *CurlBase {
 	hc := &CurlBase{}
 	hc.client = &http.Client{}
-	//为所有重定向的请求增加cookie
+	//為所有重定向的請求增加cookie
 	hc.client.CheckRedirect = func(req *http.Request, via []*http.Request) error {
 		if len(via) > 0 {
 			for _,v := range hc.GetCookie() {
@@ -32,7 +32,7 @@ func NewCurlBase() *CurlBase {
 	return hc
 }
 
-//设置代理地址
+//設置代理地址
 func (self *CurlBase) SetProxyUrl(proxyUrl string)  {
 	proxy := func(_ *http.Request) (*url.URL, error) {
 		return url.Parse(proxyUrl)
@@ -41,47 +41,26 @@ func (self *CurlBase) SetProxyUrl(proxyUrl string)  {
 	self.client.Transport = transport
 }
 
-//设置请求cookie
+//設置請求cookie
 func (self *CurlBase) AddCookie(cookies []*http.Cookie)  {
 	self.cookies = append(self.cookies, cookies...)
 }
 
-//获取当前所有的cookie
+//獲取當前所有的cookie
 func (self *CurlBase) GetCookie() ([]*http.Cookie) {
 	return self.cookies
 }
 
-// CombineParamUri
-//
-// 所有參數轉為uri格式字串,參數依照key值排序
-// ex. hash=asd&param1=a&param2=b
-func combineParamUri(param map[string]interface{}) (string, error) {
-	if param == nil {
-		return "", nil
-	}
-	
-	u := url.URL{}
-	
-	//add paramter
-	query := u.Query()
-	for k, v := range param {
-		query.Set(k, fmt.Sprint(v))
-	}
-	
-	return query.Encode(), nil
-}
-
+/**
+ * CURL GET
+ */
 func (self *CurlBase) Get(requestUrl string, params map[string]interface{}) ([]byte, int, error) {
-	paramUri, err := combineParamUri(params)
-	
-	if err != nil {
-		return nil, http.StatusOK, err
-	}
-	
+	paramUri := self.encodeParams(params)
+
 	apiUrl := self.Url + requestUrl + "?" + paramUri
-	
+	fmt.Println("send Get :", apiUrl)
 	request, err := http.NewRequest("GET", apiUrl, nil)
-	request.Header.Add("Api-Token", self.ApiToken)
+	
 	if err != nil {
 		errStr := fmt.Sprintf(
 			"Msg:%s api:%s err:%s",
@@ -92,14 +71,14 @@ func (self *CurlBase) Get(requestUrl string, params map[string]interface{}) ([]b
 		return nil, http.StatusOK, errors.New(errStr)
 	}
 	
+	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	request.Header.Add("Api-Token", self.ApiToken)
 	self.setRequestCookie(request)
 	response,_ := self.client.Do(request)
-	self.setRequestCookie(request)
-	request.Header.Add("Api-Token", self.ApiToken)
 	defer response.Body.Close()
 	
 	data, err := ioutil.ReadAll(response.Body)
-	
+	fmt.Println(data)
 	if err != nil {
 		errStr := fmt.Sprintf(
 			"Msg:%s api:%s err:%s",
@@ -113,11 +92,13 @@ func (self *CurlBase) Get(requestUrl string, params map[string]interface{}) ([]b
 	return data, response.StatusCode, err
 }
 
-
+/**
+ * CURL POST
+ */
 func (self *CurlBase) Post(requestUrl string, params map[string]interface{}) ([]byte, int, error) {
 	postData := self.encodeParams(params)
 	apiUrl := self.Url + requestUrl
-	
+	fmt.Println("send Post :", postData)
 	request, err := http.NewRequest("POST", apiUrl, strings.NewReader(postData))
 	if err != nil {
 		errStr := fmt.Sprintf(
@@ -132,7 +113,6 @@ func (self *CurlBase) Post(requestUrl string, params map[string]interface{}) ([]
 	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	request.Header.Add("Api-Token", self.ApiToken)
 	self.setRequestCookie(request)
-	
 	response, err := self.client.Do(request)
 	
 	if err != nil {
@@ -145,7 +125,7 @@ func (self *CurlBase) Post(requestUrl string, params map[string]interface{}) ([]
 		
 		return nil, http.StatusOK, errors.New(errStr)
 	}
-	
+	fmt.Println(response.Status)
 	defer response.Body.Close()
 	
 	//保存 cookie
@@ -167,6 +147,9 @@ func (self *CurlBase) Post(requestUrl string, params map[string]interface{}) ([]
 	return data, response.StatusCode, err
 }
 
+/**
+ * CURL PUT
+ */
 func (self *CurlBase) Put(requestUrl string, params map[string]interface{}) ([]byte, int, error) {
 	postData := self.encodeParams(params)
 	apiUrl := self.Url + requestUrl
@@ -207,6 +190,9 @@ func (self *CurlBase) Put(requestUrl string, params map[string]interface{}) ([]b
 	return data, response.StatusCode, err
 }
 
+/**
+ * CURL DELETE
+ */
 func (self *CurlBase) Delete(requestUrl string, params map[string]interface{}) ([]byte, int, error) {
 	postData := self.encodeParams(params)
 	apiUrl := self.Url + requestUrl
@@ -247,13 +233,19 @@ func (self *CurlBase) Delete(requestUrl string, params map[string]interface{}) (
 	return data, response.StatusCode, err
 }
 
+/**
+ * 設定Request Cookie
+ */
 func (self *CurlBase) setRequestCookie(request *http.Request)  {
 	for _,v := range self.cookies{
 		request.AddCookie(v)
 	}
 }
 
-
+/**
+ * 所有參數轉為uri格式字串,參數依照key值排序
+ * ex. hash=asd&param1=a&param2=b
+ */
 func (self *CurlBase) encodeParams(params map[string]interface{}) string {
 	u := url.URL{}
 	

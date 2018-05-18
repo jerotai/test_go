@@ -42,10 +42,6 @@ func helperPath() string {
 	return confPath
 }
 
-func CookieFilePath() string {
-	return  helperPath() + "/cookie_file"
-}
-
 /**
  * 取得 redis config
  */

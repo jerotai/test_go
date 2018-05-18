@@ -28,7 +28,7 @@ func (ex *Example) GetInfo(g *gin.Context) {
 	apiparse.GetDataParse(g, &req)
 	
 	//get site code
-	req.SiteCode = apiparse.SiteCodeParse(g.Request)
+	req.StationCode = apiparse.StationCodeParse(g.Request)
 	fmt.Println("GetInfo", req)
 	g.JSON(200, req)
 }
@@ -38,7 +38,7 @@ func (ex *Example) GetInfo(g *gin.Context) {
  */
 func (ex *Rsa) RsaPost(g *gin.Context) {
 	req := dto.ExampleList{}
-	apiparse.PostRsaDataParse(g, &req)
+	apiparse.RsaDataParse(g, &req)
 	fmt.Println("RsaPost", req)
 	g.JSON(200, req)
 }

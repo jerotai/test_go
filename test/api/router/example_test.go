@@ -24,7 +24,7 @@ func TestInitExampleRouting(t *testing.T) {
 /**
  * rsa route test
  */
-func TestInitRsaRouting(t *testing.T) {
+func TestInitRsaExampleRouting(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	e := gin.New()
 	e.Use(gin.Recovery())
@@ -32,5 +32,5 @@ func TestInitRsaRouting(t *testing.T) {
 	
 	//rsa routes
 	rsaGroup := e.Group("/rsaExample")
-	router.InitRsaRouting(rsaGroup)
+	router.InitRsaExampleRouting(rsaGroup)
 }
