@@ -1,0 +1,28 @@
+redis_info:
+  pool_size: 2000
+  pool_timeout: 3000
+  dial_timeout: 100
+  read_timeout: 100
+  write_timeout: 100
+site_list:
+  master:
+    host: "127.0.0.1"
+    port: 6000
+    password: ""
+    db: 0
+  slave:
+    host: "127.0.0.1"
+    port: 6000
+    password: ""
+    db: 0
+rsa_key:
+  master:
+    host: "127.0.0.1"
+    port: 6100
+    password: ""
+    db: 0
+  slave:
+    host: "127.0.0.1"
+    port: 6100
+    password: ""
+    db: 0

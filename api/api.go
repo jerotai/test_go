@@ -1,26 +1,70 @@
 package api
 
 import (
-	"test_go/api/router"
-	"github.com/labstack/echo"
-	//"github.com/labstack/echo/middleware"
-	"github.com/facebookgo/grace/gracehttp"
+	"github.com/aviddiviner/gin-limit"
+	"github.com/gin-gonic/gin"
+	"Stingray/api/router"
 )
 
 type APIService struct {
 }
 
 func NewApiService() *APIService {
-	return &APIService{}
+	apiService := &APIService{}
+	return apiService
 }
 
 /**
  * 啟動API服務
  */
 func (s *APIService) Start() {
-	echo := echo.New()
-	router.InitRouting(echo)
-	echo.Server.Addr = ":8080"
-	gracehttp.Serve(echo.Server)
-	echo.Close()
+	gin.SetMode(gin.ReleaseMode)
+	g := gin.New()
+	g.Use(limit.MaxAllowed(20000))
+	g.Use(gin.Recovery())
+	g.Use(gin.Logger())
+	
+	corsOptions := Options{}
+	//corsOptions.AllowOrigins = []string{"http://moa.cqcp.corp"}
+	corsOptions.AllowCredentials = true
+	g.Use(Middleware(corsOptions))
+	
+	//g.Use(cors.Default())
+	
+	ginGroup := g.Group("/example")
+	router.InitExampleRouting(ginGroup)
+	
+	//rsa routes
+	exampleGroup := g.Group("/rsaExample")
+	router.InitRsaExampleRouting(exampleGroup)
+	
+	//jellyfish routes
+	jellyfishGroup := g.Group("/")
+	router.InitJellyFishRouting(jellyfishGroup)
+	
+	//whale routes
+	whaleGroup := g.Group("/")
+	router.InitWhaleRouting(whaleGroup)
+	
+	//whitebait routes
+	whitebaitGroup := g.Group("/")
+	router.InitWhitebaitRouting(whitebaitGroup)
+	
+	//lophiiformes routes
+	lophiiformesGroup := g.Group("/")
+	router.InitLophiiformesRouting(lophiiformesGroup)
+	
+	//octopus routes
+	octopusGroup := g.Group("/")
+	router.InitOctopusRouting(octopusGroup)
+	
+	//lobster routes
+	lobsterGroup := g.Group("/")
+	router.InitLobsterRouting(lobsterGroup)
+	
+	//stingray routes
+	stingrayGroup := g.Group("/")
+	router.InitStingrayRouting(stingrayGroup)
+	
+	g.Run(":8082")
 }

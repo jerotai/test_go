@@ -1,0 +1,18 @@
+jellyfish_service:
+  Host: "http://127.0.0.1"
+  Port: 2100
+whale_service:
+  Host: "http://127.0.0.1"
+  Port: 2200
+whitebait_service:
+  Host: "http://127.0.0.1"
+  Port: 2300
+lophiiformes_service:
+  Host: "http://127.0.0.1"
+  Port: 2500
+octopus_service:
+  Host: "http://127.0.0.1"
+  Port: 2400
+lobster_service:
+  Host: "http://127.0.0.1"
+  Port: 2700
