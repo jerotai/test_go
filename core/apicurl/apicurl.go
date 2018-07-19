@@ -1,12 +1,10 @@
 package apicurl
 
 import (
-	"github.com/gin-gonic/gin"
-	"strings"
 	"Stingray/helper"
-	"Stingray/trait"
 	"fmt"
 	"sync"
+	"github.com/gin-gonic/gin"
 )
 
 var (
@@ -30,6 +28,16 @@ type (
 		apiServiceUrl string
 		apiConfInit *ApiConfInit
 	}
+	apiRsaCurl struct {
+		SendCurl *helper.CurlBase
+		apiServiceUrl string
+		apiConfInit *ApiConfInit
+	}
+	apiNormalCurl struct {
+		SendCurl *helper.CurlBase
+		apiServiceUrl string
+		apiConfInit *ApiConfInit
+	}
 )
 
 type ApiConfInit struct {
@@ -47,242 +55,70 @@ func New(apiConf *helper.ApiSettingConf, apiConfInit *ApiConfInit) *apiCurl {
 	return route
 }
 
-/**
- * Site Get Api
- */
-func (a *apiCurl) SiteSendGet(g *gin.Context) {
-	a.sendGet(g, trait.Site_Code)
+func NewRsa(apiConf *helper.ApiSettingConf, apiConfInit *ApiConfInit) *apiRsaCurl {
+	route := &apiRsaCurl{}
+	route.SendCurl = apiBaseCurl()
+	route.apiServiceUrl = fmt.Sprintf("%s:%d/", apiConf.Host, apiConf.Port)
+	route.apiConfInit = apiConfInit
+	return route
 }
 
-/**
- * Hall Get Api
- */
-func (a *apiCurl) HallSendGet(g *gin.Context) {
-	a.sendGet(g, trait.Hall_Code)
+func NewNormal(apiConf *helper.ApiSettingConf, apiConfInit *ApiConfInit) *apiNormalCurl {
+	route := &apiNormalCurl{}
+	route.SendCurl = apiBaseCurl()
+	route.apiServiceUrl = fmt.Sprintf("%s:%d/", apiConf.Host, apiConf.Port)
+	route.apiConfInit = apiConfInit
+	return route
 }
 
-/**
- * Site Post Api
- */
-func (a *apiCurl) SiteSendPost(g *gin.Context) {
-	a.sendPost(g, trait.Site_Code)
+type ApiCurlSendInit struct {
+	SiteSendGet func(*gin.Context)
+	HallSendGet func(*gin.Context)
+	SiteSendPost func(*gin.Context)
+	HallSendPost func(*gin.Context)
+	SiteSendMultiPartPost func(*gin.Context)
+	HallSendMultiPartPost func(*gin.Context)
+	SiteSendPut func(*gin.Context)
+	HallSendPut func(*gin.Context)
+	SiteSendDelete func(*gin.Context)
+	HallSendDelete func(*gin.Context)
+	JellyFishLogin func(*gin.Context)
+	NewRsaPubKey func(*gin.Context)
+	WhitebaitLogin func(*gin.Context)
+	WhitebaitRegister func(*gin.Context)
 }
 
-/**
- * Hall Post Api
- */
-func (a *apiCurl) HallSendPost(g *gin.Context) {
-	a.sendPost(g, trait.Hall_Code)
-}
-
-/**
- * Site MultiPartPost Api
- */
-func (a *apiCurl) SiteSendMultiPartPost(g *gin.Context) {
-	a.sendMultiPartPost(g, trait.Site_Code)
-}
-
-/**
- * Hall MultiPartPost Api
- */
-func (a *apiCurl) HallSendMultiPartPost(g *gin.Context) {
-	a.sendMultiPartPost(g, trait.Hall_Code)
-}
-
-/**
- * Site Put Api
- */
-func (a *apiCurl) SiteSendPut(g *gin.Context) {
-	a.sendPut(g, trait.Site_Code)
-}
-
-/**
- * Hall Put Api
- */
-func (a *apiCurl) HallSendPut(g *gin.Context) {
-	a.sendPut(g, trait.Hall_Code)
-}
-
-/**
- * Site Delete Api
- */
-func (a *apiCurl) SiteSendDelete(g *gin.Context) {
-	a.sendDelete(g, trait.Site_Code)
-}
-
-/**
- * Hall Delete Api
- */
-func (a *apiCurl) HallSendDelete(g *gin.Context) {
-	a.sendDelete(g, trait.Hall_Code)
-}
-
-/**
- * Send Get Api
- */
-func (a *apiCurl) sendGet(g *gin.Context, stationType string) {
-	//check api url path
-	urlSplit := strings.Split(g.Request.URL.Path, "/")
+func GetCurlSend(apiConf *helper.ApiSettingConf, apiConfInit *ApiConfInit) ApiCurlSendInit {
+	apiServiceSend := New(apiConf, apiConfInit)
+	var apiCurlSend ApiCurlSendInit
 	
-	//check api conf
-	apiRequestUrl, inputDto := a.apiConfInit.InitGetApiConfig("/" + urlSplit[1] + "/" + urlSplit[2])
+	apiCurlSend.JellyFishLogin = apiServiceSend.JellyFishLogin
+	apiCurlSend.NewRsaPubKey = apiServiceSend.NewRsaPubKey
+	apiCurlSend.WhitebaitLogin = apiServiceSend.WhitebaitLogin
+	apiCurlSend.WhitebaitRegister = apiServiceSend.WhitebaitRegister
 	
-	trait.DataParseByGet(g, inputDto)
-	sendParams, _ := trait.TowLayerDtoToMap(inputDto)
+	apiCurlSend.SiteSendGet = apiServiceSend.SiteSendGet
+	apiCurlSend.HallSendGet = apiServiceSend.HallSendGet
+	apiCurlSend.SiteSendMultiPartPost = apiServiceSend.SiteSendMultiPartPost
+	apiCurlSend.HallSendMultiPartPost = apiServiceSend.HallSendMultiPartPost
 	
-	//get station type code
-	sendParams[stationType] = trait.StationCodeParse(g.Request)
-	
-	//call service api
-	ApiToken := trait.GetToken(g)
-	a.SendCurl.ApiToken = ApiToken
-	body, httpStatus, err := a.SendCurl.Get(a.apiServiceUrl + apiRequestUrl, sendParams)
-	
-	if err != nil {
-		//todo 錯誤處理
-		helper.HelperLog.ErrorLog("[SendGet Api] " + apiRequestUrl + ":" + err.Error())
+	if helper.RsaOpen() == "Y" {
+		curlSend := NewRsa(apiConf, apiConfInit)
+		apiCurlSend.SiteSendPost = curlSend.SiteSendPost
+		apiCurlSend.HallSendPost = curlSend.HallSendPost
+		apiCurlSend.SiteSendPut = curlSend.SiteSendPut
+		apiCurlSend.HallSendPut = curlSend.HallSendPut
+		apiCurlSend.SiteSendDelete = curlSend.SiteSendDelete
+		apiCurlSend.HallSendDelete = curlSend.HallSendDelete
+	} else {
+		curlSend := NewNormal(apiConf, apiConfInit)
+		apiCurlSend.SiteSendPost = curlSend.SiteSendPost
+		apiCurlSend.HallSendPost = curlSend.HallSendPost
+		apiCurlSend.SiteSendPut = curlSend.SiteSendPut
+		apiCurlSend.HallSendPut = curlSend.HallSendPut
+		apiCurlSend.SiteSendDelete = curlSend.SiteSendDelete
+		apiCurlSend.HallSendDelete = curlSend.HallSendDelete
 	}
 	
-	trait.UpdataRsaKeyExpire(ApiToken)
-	g.String(httpStatus, string(body))
+	return apiCurlSend
 }
-
-/**
- * Send Post Api
- */
-func (a *apiCurl) sendPost(g *gin.Context, stationType string) {
-	//check api conf
-	apiRequestUrl, inputDto := a.apiConfInit.InitPostApiConfig(g.Request.URL.Path)
-	
-	trait.DataParse(g, inputDto)
-	/*
-	err := trait.DataParseByRsa(g, inputDto)
-	if err != nil {
-		reBody := trait.ApiResponse{}
-		reBody.Code = trait.RSA_KEY_EMPTY
-		reBody.Message = err.Error()
-		g.JSON(http.StatusOK, reBody)
-	}
-	*/
-
-	sendParams, _ := trait.TowLayerDtoToMap(inputDto)
-	
-	ApiToken := trait.GetToken(g)
-	a.SendCurl.ApiToken = ApiToken
-	
-	//get station type code
-	sendParams[stationType] = trait.StationCodeParse(g.Request)
-
-	//call service api
-	body, httpStatus, err := a.SendCurl.Post(a.apiServiceUrl + apiRequestUrl, sendParams)
-	
-	if err != nil {
-		//todo 錯誤處理
-		helper.HelperLog.ErrorLog("[SendPost Api] " + apiRequestUrl + ":" + err.Error())
-	}
-	
-	trait.UpdataRsaKeyExpire(ApiToken)
-	g.String(httpStatus, string(body))
-}
-
-/**
- * Send MultiPartPost Api
- */
-func (a *apiCurl) sendMultiPartPost(g *gin.Context, stationType string) {
-	//check api conf
-	apiRequestUrl, inputDto := a.apiConfInit.InitPostApiConfig(g.Request.URL.Path)
-	
-	ApiToken := trait.GetToken(g)
-	a.SendCurl.ApiToken = ApiToken
-	
-	sendParams, sendContentType := trait.MultiPartDataParse(g, inputDto, stationType, trait.StationCodeParse(g.Request))
-	
-	//call service api
-	body, httpStatus, err := a.SendCurl.MultiPartPost(a.apiServiceUrl + apiRequestUrl, sendParams, sendContentType)
-	
-	if err != nil {
-		//todo 錯誤處理
-		helper.HelperLog.ErrorLog("[SendMultiPartPost Api] " + apiRequestUrl + ":" + err.Error())
-	}
-	
-	trait.UpdataRsaKeyExpire(ApiToken)
-	g.String(httpStatus, string(body))
-}
-
-/**
- * Send Put Api
- */
-func (a *apiCurl) sendPut(g *gin.Context, stationType string) {
-	//check api conf
-	apiRequestUrl, inputDto := a.apiConfInit.InitPutApiConfig(g.Request.URL.Path)
-	
-	trait.DataParse(g, inputDto)
-	/*
-	err := trait.DataParseByRsa(g, inputDto)
-	if err != nil {
-		reBody := trait.ApiResponse{}
-		reBody.Code = trait.RSA_KEY_EMPTY
-		reBody.Message = err.Error()
-		g.JSON(http.StatusOK, reBody)
-	}
-	*/
-	
-	sendParams, _ := trait.TowLayerDtoToMap(inputDto)
-	
-	ApiToken := trait.GetToken(g)
-	a.SendCurl.ApiToken = ApiToken
-	
-	//get station type code
-	sendParams[stationType] = trait.StationCodeParse(g.Request)
-	
-	//call service api
-	body, httpStatus, err := a.SendCurl.Put(a.apiServiceUrl + apiRequestUrl, sendParams)
-	
-	if err != nil {
-		//todo 錯誤處理
-		helper.HelperLog.ErrorLog("[SendPut Api] " + apiRequestUrl + ":" + err.Error())
-	}
-	
-	trait.UpdataRsaKeyExpire(ApiToken)
-	g.String(httpStatus, string(body))
-}
-
-/**
- * Send Delete Api
- */
-func (a *apiCurl) sendDelete(g *gin.Context, stationType string) {
-	//check api conf
-	apiRequestUrl, inputDto := a.apiConfInit.InitDeleteApiConfig(g.Request.URL.Path)
-	
-	trait.DataParse(g, inputDto)
-	/*
-	err := trait.DataParseByRsa(g, inputDto)
-	if err != nil {
-		reBody := trait.ApiResponse{}
-		reBody.Code = trait.RSA_KEY_EMPTY
-		reBody.Message = err.Error()
-		g.JSON(http.StatusOK, reBody)
-	}
-	*/
-	
-	sendParams, _ := trait.TowLayerDtoToMap(inputDto)
-	
-	ApiToken := trait.GetToken(g)
-	a.SendCurl.ApiToken = ApiToken
-	
-	//get station type code
-	sendParams[stationType] = trait.StationCodeParse(g.Request)
-	
-	//call service api
-	body, httpStatus, err := a.SendCurl.Delete(a.apiServiceUrl + apiRequestUrl, sendParams)
-	
-	if err != nil {
-		//todo 錯誤處理
-		helper.HelperLog.ErrorLog("[SendDelete Api] " + apiRequestUrl + ":" + err.Error())
-	}
-	
-	trait.UpdataRsaKeyExpire(ApiToken)
-	g.String(httpStatus, string(body))
-}
-
-

@@ -4,7 +4,6 @@ package lophiiformesdto
  * API URL : company_bank
  */
 type CompanyBankList struct {
-	Hall_Code string `json:"hall_code"`
 	Site_Code string `json:"site_code"`
 }
 
@@ -12,7 +11,6 @@ type CompanyBankList struct {
  * API URL : company_bank/data
  */
 type CompanyBankData struct {
-	Hall_Code string `json:"hall_code"`
 	Id string `json:"id"`
 }
 
@@ -20,7 +18,6 @@ type CompanyBankData struct {
  * API URL : company_bank (POST)
  */
 type CreateCompanyBank struct {
-	Hall_Code string `json:"hall_code"`
 	Site_Code string `json:"site_code"`
 	Bank_Id int `json:"bank_id"`
 	Front_Nickname string `json:"front_nickname"`
@@ -35,10 +32,9 @@ type CreateCompanyBank struct {
 /**
  * API URL : company_bank (PUT)
  */
-type UpdataCompanyBank struct {
-	Hall_Code string `json:"hall_code"`
+type UpdateCompanyBank struct {
 	Id int `json:"id"`
-	Bank_Id int `json:"bank_id"`
+	Bank_Id *int `json:"bank_id"` //使用 *int 表示當前端未送參數時 將過濾 不加入傳送參數 (int 空值時 預設為0)
 	Front_Nickname string `json:"front_nickname"`
 	Back_Nickname string `json:"back_nickname"`
 	Name string `json:"name"`
@@ -52,7 +48,6 @@ type UpdataCompanyBank struct {
  * API URL : company_bank (DELETE)
  */
 type DeleteCompanyBank struct {
-	Hall_Code string `json:"hall_code"`
 	Id int `json:"id"`
 }
 
@@ -60,6 +55,5 @@ type DeleteCompanyBank struct {
  * Api Url : company_bank/dropdownlist (GET)取得公司銀行卡下拉清單
  */
 type CompanyBankDropdownList struct {
-	Hall_Code string `json:"hall_code"`
 	Site_Code string `json:"site_code"`
 }

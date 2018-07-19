@@ -10,29 +10,27 @@ import (
 	"Stingray/trait"
 )
 
-type UserLoginRes struct {
-	Code string `json:"code"`
-	Result struct{
-		Api_Token string `json:"api_token"`
-	} `json:"result"`
-	Message string `json:"message"`
-}
-
 /**
  * USer LoginAccount
  */
 func (a *apiCurl) WhitebaitLogin(g *gin.Context) {
 	//check api conf
-	inputDto := &dto.UserLogin{}
-	trait.DataParse(g, inputDto)
-	sendParams, _ := trait.TowLayerDtoToMap(inputDto)
+	apiRequestUrl, inputDto := a.apiConfInit.InitPostApiConfig(g.Request.URL.Path)
+	
+	sendParams, err := trait.DataParse(g, inputDto)
+	
+	if err != nil {
+		//todo 錯誤處理
+		helper.HelperLog.ErrorLog("[WhitebaitLogin Error] " + apiRequestUrl + ":" + err.Error())
+	}
 	
 	ApiToken := trait.GetToken(g)
 	a.SendCurl.ApiToken = ApiToken
 	
-	//get hall code
-	sendParams["site_code"] = trait.StationCodeParse(g.Request)
+	//get site code
+	sendParams[trait.Site_Code] = trait.StationCodeParse(g.Request)
 	sendParams["login_ip"] = trait.GetUserIp(g)
+	sendParams["domain"] = trait.GetUserDomain(g.Request, true)
 	
 	//call whitebait service api
 	body, httpStatus, err := a.SendCurl.Post(a.apiServiceUrl + "user/login", sendParams)
@@ -44,7 +42,7 @@ func (a *apiCurl) WhitebaitLogin(g *gin.Context) {
 	
 	// return rsa public key to client
 	jsonMap := make(map[string]interface{})
-	loginRes := UserLoginRes{}
+	loginRes := dto.UserLoginRes{}
 	json.Unmarshal(body, &loginRes)
 	
 	result := make(map[string]interface{})
@@ -76,15 +74,18 @@ func (a *apiCurl) WhitebaitRegister (g *gin.Context) {
 	//check api conf
 	apiRequestUrl, inputDto := a.apiConfInit.InitPostApiConfig(g.Request.URL.Path)
 	
-	trait.DataParse(g, inputDto)
-
-	sendParams, _ := trait.TowLayerDtoToMap(inputDto)
+	sendParams, err := trait.DataParse(g, inputDto)
+	
+	if err != nil {
+		//todo 錯誤處理
+		helper.HelperLog.ErrorLog("[WhitebaitRegister Error] " + apiRequestUrl + ":" + err.Error())
+	}
 	
 	ApiToken := trait.GetToken(g)
 	a.SendCurl.ApiToken = ApiToken
 	
 	//get site code
-	sendParams["site_code"] = trait.StationCodeParse(g.Request)
+	sendParams[trait.Site_Code] = trait.StationCodeParse(g.Request)
 	
 	//call service api
 	body, httpStatus, err := a.SendCurl.Post(a.apiServiceUrl + apiRequestUrl, sendParams)
@@ -94,6 +95,6 @@ func (a *apiCurl) WhitebaitRegister (g *gin.Context) {
 		helper.HelperLog.ErrorLog("[Whitebait Register Api] " + err.Error())
 	}
 	
-	trait.UpdataRsaKeyExpire(ApiToken)
+	trait.UpdateRsaKeyExpire(ApiToken)
 	g.String(httpStatus, string(body))
 }

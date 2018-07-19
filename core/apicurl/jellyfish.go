@@ -9,34 +9,24 @@ import (
 	"Stingray/trait"
 )
 
-
-type LoginRes struct {
-	Code string `json:"code"`
-	Result struct{
-		Api_Token string `json:"api_token"`
-		Role_Id int `json:"role_id"`
-	} `json:"result"`
-	Message string `json:"message"`
-}
-
 /**
  * JellyFish Login Api
  */
 func (j *apiCurl) JellyFishLogin(g *gin.Context) {
-	inputDto := dto.Login{}
-	trait.DataParse(g, &inputDto)
+	//check api conf
+	apiRequestUrl, inputDto := j.apiConfInit.InitPostApiConfig(g.Request.URL.Path)
 	
-	//get hall code
-	inputDto.Hall_Code = trait.StationCodeParse(g.Request)
-	sendParams, err := trait.DtoToMap(inputDto)
+	sendParams, err := trait.DataParse(g, inputDto)
 	
 	if err != nil {
 		//todo 錯誤處理
-		helper.HelperLog.ErrorLog("[JellyFish-Login] DtoToMap " + err.Error())
+		helper.HelperLog.ErrorLog("[JellyFish-Login DataParse Error] " + apiRequestUrl + ":" + err.Error())
 	}
 	
+	sendParams[trait.Hall_Code] = trait.StationCodeParse(g.Request)
+	
 	//call jellyFish service api
-	body, httpStatus, err := j.SendCurl.Post(j.apiServiceUrl + "login", sendParams)
+	body, httpStatus, err := j.SendCurl.Post(j.apiServiceUrl + apiRequestUrl, sendParams)
 	
 	if err != nil {
 		//todo 錯誤處理
@@ -46,7 +36,7 @@ func (j *apiCurl) JellyFishLogin(g *gin.Context) {
 	
 	// return rsa public key to client
 	jsonMap := make(map[string]interface{})
-	loginRes := LoginRes{}
+	loginRes := dto.LoginRes{}
 	json.Unmarshal(body, &loginRes)
 	result := make(map[string]interface{})
 	result["api_token"] =  loginRes.Result.Api_Token

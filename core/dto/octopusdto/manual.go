@@ -4,7 +4,6 @@ package octopusdto
  * Api Url : manual
  */
 type ManualDepositsList struct {
-	Hall_Code string `json:"hall_code"`
 	Status string `json:"status"`
 	Start_Time string `json:"start_time"`
 	End_Time string `json:"end_time"`
@@ -19,7 +18,6 @@ type ManualDepositsList struct {
  * Api Url : manual (POST)
  */
 type CreateManualDeposits struct {
-	Hall_Code string `json:"hall_code"`
 	Site_Code string `json:"site_code"`
 	Account string `json:"account"`
 	Balance int `json:"balance"`
@@ -32,7 +30,6 @@ type CreateManualDeposits struct {
  * Api Url : manualDeposits/audit 人工稽核
  */
 type ManualDepositsAudit struct {
-	Hall_Code string `json:"hall_code"`
 	Txnid string `json:"txnid"`
 }
 
@@ -40,7 +37,6 @@ type ManualDepositsAudit struct {
  * Api Url : manualDeposits/pass 人工通過
  */
 type ManualDepositsPass struct {
-	Hall_Code string `json:"hall_code"`
 	Txnid string `json:"txnid"`
 	Dama int `json:"dama"`
 	Bonus_Dama int `json:"bonus_dama"`
@@ -52,7 +48,6 @@ type ManualDepositsPass struct {
  * Api Url : manualDeposits/reject 人工拒絕
  */
 type ManualDepositsReject struct {
-	Hall_Code string `json:"hall_code"`
 	Txnid string `json:"txnid"`
 	Dama int `json:"dama"`
 	Bonus_Dama int `json:"bonus_dama"`
@@ -65,7 +60,6 @@ type ManualDepositsReject struct {
  * Api Url : manualWithdraws 人工出款 (POST)
  */
 type CreateManualWithdraws struct {
-	Hall_Code string `json:"hall_code"`
 	Site_Code string `json:"site_code"`
 	Account string `json:"account"`
 	User_Bank_Id int `json:"user_bank_id"`
@@ -79,15 +73,14 @@ type CreateManualWithdraws struct {
  * Api Url : manualWithdraws 人工出款列表 (GET)
  */
 type ManualWithdrawsList struct {
-	Hall_Code string `json:"hall_code"`
-	Status int `json:"status"`
+	Status string `json:"status"`
 	Site_Code string `json:"site_code"`
 	Start_Time string `json:"start_time"`
 	End_Time string `json:"end_time"`
 	Page string `json:"page"`
 	Count string `json:"count"`
 	Trans_Id string `json:"trans_id"`
-	User_Bank_Id int `json:"user_bank_id"`
+	User_Bank_Id string `json:"user_bank_id"`
 	User string `json:"user"`
 }
 
@@ -95,9 +88,8 @@ type ManualWithdrawsList struct {
  * Api Url : manualDeposits/unlock (PUT) 人工入款列表頁解鎖
  */
 type ManualDepositsUnlock struct {
-	Hall_Code string `json:"hall_code"`
 	Txnid string `json:"txnid"`
-	Type int `json:type`
+	Type int `json:"type"`
 }
 
 
@@ -105,7 +97,60 @@ type ManualDepositsUnlock struct {
  * Api Url : manualWithdraws/unlock (PUT) 人工出款列表頁解鎖
  */
 type ManualWithdrawsUnlock struct {
-	Hall_Code string `json:"hall_code"`
 	Txnid string `json:"txnid"`
-	Type int `json:type`
+	Type int `json:"type"`
+}
+
+/**
+ * Api Url : manualWithdraws/audit (GET)
+ */
+type ManualWithdrawsAudit struct {
+	Txnid string `json:"txnid"`
+	Type string `json:"type"`
+}
+
+/**
+ * Api Url : manualWithdraws/audit/pass (POST) 人工出款稽核通過
+ */
+type ManualWithdrawsAuditPass struct {
+	Txnid string `json:"txnid"`
+	Cost int `json:"cost"`
+	Front_Remark string `json:"front_remark"`
+	Back_Remark string `json:"back_remark"`
+}
+
+/**
+ * Api Url : manualWithdraws/audit/reject (POST) 人工出款稽核拒絕
+ */
+type ManualWithdrawsAuditReject struct {
+	Txnid string `json:"txnid"`
+	Cost int `json:"cost"`
+	Front_Remark string `json:"front_remark"`
+	Back_Remark string `json:"back_remark"`
+}
+
+/**
+ * Api Url : manualWithdraws/grant (GET) 取得人工出款核發對應資訊
+ */
+type ManualWithdrawsGrant struct {
+	Txnid string `json:"txnid"`
+	Type string `json:"type"`
+}
+
+/**
+ * Api Url : manualWithdraws/grant/pass (POST) 人工出款核發通過
+ */
+type ManualWithdrawsGrantPass struct {
+	Txnid string `json:"txnid"`
+	Front_Remark string `json:"front_remark"`
+	Back_Remark string `json:"back_remark"`
+}
+
+/**
+ * Api Url : manualWithdraws/grant/reject (POST) 人工出款核發拒絕
+ */
+type ManualWithdrawsGrantReject struct {
+	Txnid string `json:"txnid"`
+	Front_Remark string `json:"front_remark"`
+	Back_Remark string `json:"back_remark"`
 }

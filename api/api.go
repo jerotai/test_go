@@ -31,13 +31,6 @@ func (s *APIService) Start() {
 	
 	//g.Use(cors.Default())
 	
-	ginGroup := g.Group("/example")
-	router.InitExampleRouting(ginGroup)
-	
-	//rsa routes
-	exampleGroup := g.Group("/rsaExample")
-	router.InitRsaExampleRouting(exampleGroup)
-	
 	//jellyfish routes
 	jellyfishGroup := g.Group("/")
 	router.InitJellyFishRouting(jellyfishGroup)
@@ -61,6 +54,10 @@ func (s *APIService) Start() {
 	//lobster routes
 	lobsterGroup := g.Group("/")
 	router.InitLobsterRouting(lobsterGroup)
+	
+	//electricity routes
+	electricityGroup := g.Group("/")
+	router.InitElectricityRouting(electricityGroup)
 	
 	//stingray routes
 	stingrayGroup := g.Group("/")

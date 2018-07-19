@@ -16,3 +16,6 @@ octopus_service:
 lobster_service:
   Host: "http://127.0.0.1"
   Port: 2700
+electricity_service:
+  Host: "http://127.0.0.1"
+  Port: 2800

@@ -17,19 +17,19 @@ func (l *Lophiiformes) InitPutApiConfig(apiUrl string) (string, interface{})  {
 	var apiDto interface {}
 	switch apiUrl {
 	case "/company_bank":
-		apiDto = &dto.UpdataCompanyBank{}
+		apiDto = &dto.UpdateCompanyBank{}
 		apiRequestUrl = "company_bank"
 	case "/payment_config":
-		apiDto = &dto.UpdataPaymentConfig{}
+		apiDto = &dto.UpdatePaymentConfig{}
 		apiRequestUrl = "payment_config"
 	case "/payment_config/banks":
-		apiDto = &dto.UpdataPaymentConfigBanks{}
+		apiDto = &dto.UpdatePaymentConfigBanks{}
 		apiRequestUrl = "payment_config/banks"
 	case "/user_bank":
-		apiDto = &dto.UpdataUserBank{}
+		apiDto = &dto.UpdateUserBank{}
 		apiRequestUrl = "user_bank"
 	case "/user_bank/backend":
-		apiDto = &dto.BackEndUpdataUserBank{}
+		apiDto = &dto.BackEndUpdateUserBank{}
 		apiRequestUrl = "user_bank/backend"
 	default:
 		//todo

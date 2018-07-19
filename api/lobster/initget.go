@@ -36,6 +36,18 @@ func (l *Lobster) InitGetApiConfig(apiUrl string) (string, interface{}) {
 	case "/kind/transType":
 		apiDto = &dto.TransType{}
 		apiRequestUrl = "kind/trans_type"
+	case "/userLoginReport/userLoginDriveCount":
+		apiDto = &dto.UserLoginDriveCount{}
+		apiRequestUrl = "userLoginReport/user_login_drive_count"
+	case "/userLoginReport/userLoginInfo":
+		apiDto = &dto.UserLoginInfo{}
+		apiRequestUrl = "userLoginReport/user_login_info"
+	case "/userLoginReport/userLoginInfoOnline":
+		apiDto = &dto.UserLoginInfoOnline{}
+		apiRequestUrl = "userLoginReport/user_login_online"
+	case "/userLoginReport/userLoginRecord":
+		apiDto = &dto.UserLoginRecord{}
+		apiRequestUrl = "userLoginReport/user_login_record"
 	default:
 		//todo
 		helper.HelperLog.ErrorLog("[Lobster InitGetApiConfig] Url Not Merge : apiUrl: " + apiUrl)

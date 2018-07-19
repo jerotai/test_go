@@ -55,7 +55,7 @@ func RsaDecryptByKey(key string, ciphertext []byte) ([]byte, error) {
  * Create Login Rsa Key
  */
 func CreateRsaKey() (string, string){
-	key, err := rsa.GenerateKey(rand.Reader, 2048)
+	key, err := rsa.GenerateKey(rand.Reader, 4096)
 	if err != nil {
 		HelperLog.ErrorLog("[rsahelper CreateRsaKey] Private key cannot be created. " + err.Error())
 		return "", ""

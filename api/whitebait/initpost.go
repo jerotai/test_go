@@ -27,6 +27,9 @@ func (i *Whitebait) InitPostApiConfig(apiUrl string) (string, interface{}) {
 	case "/user/passwordWithdraw":
 		apiDto = &dto.CreateUserPasswordWithdraw{}
 		apiRequestUrl = "user/password/withdraw"
+	case "/user/login":
+		apiDto = &dto.UserLogin{}
+		apiRequestUrl = "user/login"
 	default:
 		//todo
 		helper.HelperLog.ErrorLog("[Whitebait InitPostApiConfig] Url Not Merge : apiUrl: " + apiUrl)

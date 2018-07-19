@@ -24,6 +24,12 @@ func (i *Octopus) InitGetApiConfig(apiUrl string) (string, interface{}) {
 	case "/manualWithdraws/list":
 		apiDto = &dto.ManualWithdrawsList{}
 		apiRequestUrl = "manualWithdraws"
+	case "/manualWithdraws/audit":
+		apiDto = &dto.ManualWithdrawsAudit{}
+		apiRequestUrl = "manualWithdraws/audit"
+	case "/manualWithdraws/grant":
+		apiDto = &dto.ManualWithdrawsGrant{}
+		apiRequestUrl = "manualWithdraws/grant"
 	case "/fourthDeposits/list":
 		apiDto = &dto.FourthDepositsList{}
 		apiRequestUrl = "fourthDeposits"
@@ -33,9 +39,9 @@ func (i *Octopus) InitGetApiConfig(apiUrl string) (string, interface{}) {
 	case "/fourthDeposits/limit":
 		apiDto = &dto.FourthDepositsLimit{}
 		apiRequestUrl = "fourthDeposits/limit"
-	case "/bank/list":
+	case "/bankDeposits/list":
 		apiDto = &dto.BankList{}
-		apiRequestUrl = "bank/list"
+		apiRequestUrl = "bankDeposits"
 	case "/bankDeposits/menu":
 		apiDto = &dto.BankDepositsMenu{}
 		apiRequestUrl = "bankDeposits/menu"
@@ -51,12 +57,15 @@ func (i *Octopus) InitGetApiConfig(apiUrl string) (string, interface{}) {
 	case "/providerWithdraws/list":
 		apiDto = &dto.ProviderWithdrawsList{}
 		apiRequestUrl = "providerWithdraws"
-	case "/providerWithdraws/setting":
-		apiDto = &dto.ProviderWithdrawsSetting{}
-		apiRequestUrl = "providerWithdraws/setting"
 	case "/providerWithdraws/limit":
 		apiDto = &dto.ProviderWithdrawsLimit{}
 		apiRequestUrl = "providerWithdraws/limit"
+	case "/providerWithdraws/audit":
+		apiDto = &dto.ProviderWithdrawsAudit{}
+		apiRequestUrl = "providerWithdraws/audit"
+	case "/providerWithdraws/grant":
+		apiDto = &dto.ProviderWithdrawsGrant{}
+		apiRequestUrl = "providerWithdraws/grant"
 	case "/fourthDeposits/menu_thirds":
 		apiDto = &dto.FourthDepositsMenuThirds{}
 		apiRequestUrl = "fourthDeposits/menu/thirds"

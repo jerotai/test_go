@@ -54,9 +54,33 @@ func (i *Octopus) InitPostApiConfig(apiUrl string) (string, interface{}) {
 	case "/manualWithdraws":
 		apiDto = &dto.CreateManualWithdraws{}
 		apiRequestUrl = "manualWithdraws"
+	case "/manualWithdraws/auditPass":
+		apiDto = &dto.ManualWithdrawsAuditPass{}
+		apiRequestUrl = "manualWithdraws/audit/pass"
+	case "/manualWithdraws/auditReject":
+		apiDto = &dto.ManualWithdrawsAuditReject{}
+		apiRequestUrl = "manualWithdraws/audit/reject"
+	case "/manualWithdraws/grantPass":
+		apiDto = &dto.ManualWithdrawsGrantPass{}
+		apiRequestUrl = "manualWithdraws/grant/pass"
+	case "/manualWithdraws/grantReject":
+		apiDto = &dto.ManualWithdrawsGrantReject{}
+		apiRequestUrl = "manualWithdraws/grant/reject"
 	case "/providerWithdraws":
 		apiDto = &dto.CreateProviderWithdraws{}
 		apiRequestUrl = "providerWithdraws"
+	case "/providerWithdraws/auditPass":
+		apiDto = &dto.ProviderWithdrawsAuditPass{}
+		apiRequestUrl = "providerWithdraws/audit/pass"
+	case "/providerWithdraws/auditReject":
+		apiDto = &dto.ProviderWithdrawsAuditReject{}
+		apiRequestUrl = "providerWithdraws/audit/reject"
+	case "/providerWithdraws/grantPass":
+		apiDto = &dto.ProviderWithdrawsGrantPass{}
+		apiRequestUrl = "providerWithdraws/grant/pass"
+	case "/providerWithdraws/grantReject":
+		apiDto = &dto.ProviderWithdrawsGrantReject{}
+		apiRequestUrl = "providerWithdraws/grant/reject"
 	default:
 		//todo
 		helper.HelperLog.ErrorLog("[Octopus InitPostApiConfig] Url Not Merge : apiUrl: " + apiUrl)

@@ -15,6 +15,9 @@ func (j *JellyFish) InitPostApiConfig(apiUrl string) (string, interface{}) {
 	apiRequestUrl := ""
 	var apiDto interface {}
 	switch apiUrl {
+	case "/login":
+		apiDto = &dto.Login{}
+		apiRequestUrl = "login"
 	case "/hall":
 		apiDto = &dto.CreateHall{}
 		apiRequestUrl = "hall"

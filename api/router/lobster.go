@@ -17,17 +17,17 @@ func InitLobsterRouting(routerGroup *gin.RouterGroup) {
 	apiConfInit.InitPutApiConfig = router.InitPutApiConfig
 	apiConfInit.InitDeleteApiConfig = router.InitDeleteApiConfig
 	
-	apicurlSend := apicurl.New(apiConf, apiConfInit)
+	var apiCurlSend = apicurl.GetCurlSend(apiConf, apiConfInit)
 	
 	/**
 	 * report Group
 	 */
 	report := routerGroup.Group("/report")
 	{
-		report.GET("/outInList/:Site_Code/:Start_Time/:End_Time", apicurlSend.HallSendGet)
-		report.GET("/depositList/:Site_Code/:Start_Time/:End_Time/:Page/:Count/", apicurlSend.HallSendGet)
-		report.GET("/withdrawList/:Site_Code/:Start_Time/:End_Time/:Page/:Count/", apicurlSend.HallSendGet)
-		report.GET("/userTrans/:Site_Code/:Start_Time/:End_Time/:User/:Kind/:Page/:Count/", apicurlSend.HallSendGet)
+		report.GET("/outInList/:Site_Code/:Start_Time/:End_Time", apiCurlSend.HallSendGet)
+		report.GET("/depositList/:Site_Code/:Start_Time/:End_Time/:Page/:Count/", apiCurlSend.HallSendGet)
+		report.GET("/withdrawList/:Site_Code/:Start_Time/:End_Time/:Page/:Count/", apiCurlSend.HallSendGet)
+		report.GET("/userTrans/:Site_Code/:Start_Time/:End_Time/:User/:Kind/:Page/:Count/", apiCurlSend.HallSendGet)
 	}
 	
 	/**
@@ -35,8 +35,19 @@ func InitLobsterRouting(routerGroup *gin.RouterGroup) {
 	 */
 	kind := routerGroup.Group("/kind")
 	{
-		kind.GET("/depositType", apicurlSend.HallSendGet)
-		kind.GET("/withdrawType", apicurlSend.HallSendGet)
-		kind.GET("/transType", apicurlSend.HallSendGet)
+		kind.GET("/depositType", apiCurlSend.HallSendGet)
+		kind.GET("/withdrawType", apiCurlSend.HallSendGet)
+		kind.GET("/transType", apiCurlSend.HallSendGet)
+	}
+	
+	/**
+	 * userLoginReport Group
+	 */
+	userLoginReport := routerGroup.Group("/userLoginReport")
+	{
+		userLoginReport.GET("/userLoginDriveCount/:Site_Code/:Start_Time/:End_Time",apiCurlSend.HallSendGet)
+		userLoginReport.GET("/userLoginInfo/:Site_Code/:Start_Time/:End_Time/:Ip_Is_Repeat/:Page/:Count",apiCurlSend.HallSendGet)
+		userLoginReport.GET("/userLoginInfoOnline/:Site_Code/:Start_Time/:End_Time/:Ip_Is_Repeat/:Page/:Count",apiCurlSend.HallSendGet)
+		userLoginReport.GET("/userLoginRecord/:Site_Code/:Start_Time/:End_Time/:Page/:Count",apiCurlSend.HallSendGet)
 	}
 }

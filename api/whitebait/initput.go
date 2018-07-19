@@ -16,41 +16,41 @@ func (i *Whitebait) InitPutApiConfig(apiUrl string) (string, interface{}) {
 	var apiDto interface {}
 	switch apiUrl {
 	case "/user/password":
-		apiDto = &dto.UpdataUserPassword{}
+		apiDto = &dto.UpdateUserPassword{}
 		apiRequestUrl = "user/password"
 	case "/user/info":
-		apiDto = &dto.UpdataUserInfo{}
+		apiDto = &dto.UpdateUserInfo{}
 		apiRequestUrl = "user/info"
 	case "/user/registerSetting":
-		apiDto = &dto.UpdataUserRegisterSetting{}
+		apiDto = &dto.UpdateUserRegisterSetting{}
 		apiRequestUrl = "user/register/setting"
 	case "/user_level":
-		apiDto = &dto.UpdataUserLevel{}
+		apiDto = &dto.UpdateUserLevel{}
 		apiRequestUrl = "user_level"
 	case "/user_level/amount":
-		apiDto = &dto.UpdataUserLevelAmount{}
+		apiDto = &dto.UpdateUserLevelAmount{}
 		apiRequestUrl = "user_level/amount"
 	case "/user_level/payment":
-		apiDto = &dto.UpdataUserLevelPayment{}
+		apiDto = &dto.UpdateUserLevelPayment{}
 		apiRequestUrl = "user_level/payment"
 	case "/user_level/company_bank":
-		apiDto = &dto.UpdataUserLevelCompanyBank{}
+		apiDto = &dto.UpdateUserLevelCompanyBank{}
 		apiRequestUrl = "user_level/company_bank"
 	case "/user/passwordWithdraw":
-		apiDto = &dto.UpdataUserPasswordWithdraw{}
+		apiDto = &dto.UpdateUserPasswordWithdraw{}
 		apiRequestUrl = "user/password/withdraw"
 	case "/user/passwordWithdrawUpdate":
-		apiDto = &dto.UpdataBackEndUserPasswordWithdraw{}
+		apiDto = &dto.UpdateBackEndUserPasswordWithdraw{}
 		apiRequestUrl = "user/password/withdraw/update"
 	case "/user/passwordUpdate":
-		apiDto = &dto.UpdataBackEndUserPassword{}
+		apiDto = &dto.UpdateBackEndUserPassword{}
 		apiRequestUrl = "user/password/update"
 	case "/user_level/user":
-		apiDto = &dto.UpdataBackEndUserLevel{}
+		apiDto = &dto.UpdateBackEndUserLevel{}
 		apiRequestUrl = "user_level/user"
 	case "/user_level/batch":
-		apiDto = &dto.UpdataBackEndUserLevelBatch{}
-		apiRequestUrl = "user_level/user"
+		apiDto = &dto.UpdateBackEndUserLevelBatch{}
+		apiRequestUrl = "user_level/batch"
 	default:
 		//todo
 		helper.HelperLog.ErrorLog("[Whitebait InitPutApiConfig] Url Not Merge : apiUrl: " + apiUrl)

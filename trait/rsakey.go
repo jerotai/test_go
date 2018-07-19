@@ -5,12 +5,12 @@ import (
 	"Stingray/helper"
 )
 
-func UpdataRsaKeyExpire(ApiToken string) {
+func UpdateRsaKeyExpire(ApiToken string) {
 	rsaKeyRedis := rsakey.New()
-	updataStatus := rsaKeyRedis.SetTokenRsaKeyExpire(ApiToken)
+	UpdateStatus := rsaKeyRedis.SetTokenRsaKeyExpire(ApiToken)
 	
-	if updataStatus != true {
-		helper.HelperLog.ErrorLog("[updataRsaKeyExpire] Updata Expire Error")
+	if UpdateStatus != true {
+		helper.HelperLog.ErrorLog("[UpdateRsaKeyExpire] Update Expire Error")
 	}
 }
 

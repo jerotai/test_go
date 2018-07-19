@@ -29,9 +29,31 @@ var (
 	// 單例模式實例
 	redisInst *viper.Viper
 	apiInst *viper.Viper
+	rsaInst *viper.Viper
 	redisConfOnce   sync.Once
 	apiConfOnce    sync.Once
+	rsaConfOnce    sync.Once
 )
+
+
+// rsaForge : 取得實例
+func rsaForge() *viper.Viper {
+	rsaConfOnce.Do(func() {
+		rsaInst = viper.New()
+		
+		rsaInst.AddConfigPath(configPath())
+		rsaInst.SetConfigName("rsa")
+		rsaInst.SetEnvPrefix("router")
+		rsaInst.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+		rsaInst.AutomaticEnv()
+		
+		if err := rsaInst.ReadInConfig(); err != nil {
+			HelperLog.ErrorLog("[Confighelp rsaForge] " + err.Error())
+		}
+	})
+	
+	return rsaInst
+}
 
 // apiForge : 取得實例
 func apiForge() *viper.Viper {
@@ -138,4 +160,10 @@ func ApiSetting(name string) *ApiSettingConf {
 	reConf.Port = conf.GetInt(name+ ".port")
 	
 	return reConf
+}
+
+func RsaOpen() string {
+	conf := rsaForge()
+	
+	return conf.GetString("rsa_open")
 }

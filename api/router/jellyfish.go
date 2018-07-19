@@ -17,35 +17,34 @@ func InitJellyFishRouting(jellyfishGroup *gin.RouterGroup) {
 	apiConfInit.InitPutApiConfig = router.InitPutApiConfig
 	apiConfInit.InitDeleteApiConfig = router.InitDeleteApiConfig
 	
-	apicurlSend := apicurl.New(apiConf, apiConfInit)
-	
+	var apiCurlSend = apicurl.GetCurlSend(apiConf, apiConfInit)
 	
 	/**
 	 * User Group
 	 */
-	jellyfishGroup.POST(("/login"), apicurlSend.JellyFishLogin)
+	jellyfishGroup.POST(("/login"), apiCurlSend.JellyFishLogin)
 	
 	/**
 	 * Password Group
 	 */
-	jellyfishGroup.PUT(("/password"), apicurlSend.HallSendPut)
+	jellyfishGroup.PUT(("/password"), apiCurlSend.HallSendPut)
 	
 	/**
 	 * Role Group
 	 */
-	jellyfishGroup.GET(("/role/list"), apicurlSend.HallSendGet)
+	jellyfishGroup.GET(("/role/list"), apiCurlSend.HallSendGet)
 
 	/**
 	 * Hall Group (廳主)
 	 */
 	hall := jellyfishGroup.Group("/hall")
 	{
-		hall.POST((""), apicurlSend.HallSendPost)
-		hall.PUT((""), apicurlSend.HallSendPut)
-		hall.PUT(("/enabled"), apicurlSend.HallSendPut)
-		hall.PUT(("/password"), apicurlSend.HallSendPut)
-		hall.GET(("/subList/:Page/:Count"), apicurlSend.HallSendGet)
-		hall.GET(("/dropdownlist"), apicurlSend.HallSendGet)
+		hall.POST((""), apiCurlSend.HallSendPost)
+		hall.PUT((""), apiCurlSend.HallSendPut)
+		hall.PUT(("/enabled"), apiCurlSend.HallSendPut)
+		hall.PUT(("/password"), apiCurlSend.HallSendPut)
+		hall.GET(("/subList/:Page/:Count"), apiCurlSend.HallSendGet)
+		hall.GET(("/dropdownlist"), apiCurlSend.HallSendGet)
 	}
 	
 	/**
@@ -55,12 +54,12 @@ func InitJellyFishRouting(jellyfishGroup *gin.RouterGroup) {
 	{
 		//hall_code=CQ1&site_code=AA01&status=1&name=AA01
 		//&start_time=2018-05-01 00:00:00&end_time=2018-05-12 23:59:59
-		shareholder.GET(("/list/:Site_Code/:Page/:Count/"), apicurlSend.HallSendGet)
-		shareholder.GET(("/data/:Id"), apicurlSend.HallSendGet)
-		shareholder.GET(("/dropdownlist/:Site_Code"), apicurlSend.HallSendGet)
-		shareholder.POST((""), apicurlSend.HallSendPost)
-		shareholder.PUT((""), apicurlSend.HallSendPut)
-		shareholder.PUT(("/password"), apicurlSend.HallSendPut)
+		shareholder.GET(("/list/:Site_Code/:Page/:Count/"), apiCurlSend.HallSendGet)
+		shareholder.GET(("/data/:Id"), apiCurlSend.HallSendGet)
+		shareholder.GET(("/dropdownlist/:Site_Code"), apiCurlSend.HallSendGet)
+		shareholder.POST((""), apiCurlSend.HallSendPost)
+		shareholder.PUT((""), apiCurlSend.HallSendPut)
+		shareholder.PUT(("/password"), apiCurlSend.HallSendPut)
 	}
 	
 	/**
@@ -68,11 +67,11 @@ func InitJellyFishRouting(jellyfishGroup *gin.RouterGroup) {
 	 */
 	shareholderSub := jellyfishGroup.Group("/shareholderSub")
 	{
-		shareholderSub.GET(("/list/:Page/:Count/"), apicurlSend.HallSendGet)
-		shareholderSub.GET(("/data/:Id"), apicurlSend.HallSendGet)
-		shareholderSub.POST((""), apicurlSend.HallSendPost)
-		shareholderSub.PUT((""), apicurlSend.HallSendPut)
-		shareholderSub.PUT(("/password"), apicurlSend.HallSendPut)
+		shareholderSub.GET(("/list/:Page/:Count/"), apiCurlSend.HallSendGet)
+		shareholderSub.GET(("/data/:Id"), apiCurlSend.HallSendGet)
+		shareholderSub.POST((""), apiCurlSend.HallSendPost)
+		shareholderSub.PUT((""), apiCurlSend.HallSendPut)
+		shareholderSub.PUT(("/password"), apiCurlSend.HallSendPut)
 	}
 	
 	/**
@@ -80,12 +79,11 @@ func InitJellyFishRouting(jellyfishGroup *gin.RouterGroup) {
 	 */
 	hallSub := jellyfishGroup.Group("/hallSub")
 	{
-		hallSub.POST((""), apicurlSend.HallSendPost)
-		hallSub.PUT("", apicurlSend.HallSendPut)
-		hallSub.PUT(("/password"), apicurlSend.HallSendPut)
-		hallSub.GET("/list/:Page/:Count",apicurlSend.HallSendGet)
-		hallSub.GET("/data/:Id",apicurlSend.HallSendGet)
-		
+		hallSub.POST((""), apiCurlSend.HallSendPost)
+		hallSub.PUT("", apiCurlSend.HallSendPut)
+		hallSub.PUT(("/password"), apiCurlSend.HallSendPut)
+		hallSub.GET("/list/:Page/:Count", apiCurlSend.HallSendGet)
+		hallSub.GET("/data/:Id", apiCurlSend.HallSendGet)
 	}
 	
 	/**
@@ -93,12 +91,12 @@ func InitJellyFishRouting(jellyfishGroup *gin.RouterGroup) {
 	 */
 	generalAgent := jellyfishGroup.Group("/generalAgent")
 	{
-		generalAgent.GET("/list/:Shareholder_Id/:Page/:Count/",apicurlSend.HallSendGet)
-		generalAgent.GET("/data/:Id",apicurlSend.HallSendGet)
-		generalAgent.GET(("/dropdownlist/:Site_Code"), apicurlSend.HallSendGet)
-		generalAgent.POST("", apicurlSend.HallSendPost)
-		generalAgent.PUT("", apicurlSend.HallSendPut)
-		generalAgent.PUT("/password", apicurlSend.HallSendPut)
+		generalAgent.GET("/list/:Shareholder_Id/:Page/:Count/", apiCurlSend.HallSendGet)
+		generalAgent.GET("/data/:Id", apiCurlSend.HallSendGet)
+		generalAgent.GET(("/dropdownlist/:Site_Code"), apiCurlSend.HallSendGet)
+		generalAgent.POST("", apiCurlSend.HallSendPost)
+		generalAgent.PUT("", apiCurlSend.HallSendPut)
+		generalAgent.PUT("/password", apiCurlSend.HallSendPut)
 	}
 	
 	/**
@@ -106,11 +104,11 @@ func InitJellyFishRouting(jellyfishGroup *gin.RouterGroup) {
 	 */
 	generalAgentSub := jellyfishGroup.Group("/generalAgentSub")
 	{
-		generalAgentSub.GET("/list/:Page/:Count/",apicurlSend.HallSendGet)
-		generalAgentSub.GET("/data/:Id",apicurlSend.HallSendGet)
-		generalAgentSub.POST("", apicurlSend.HallSendPost)
-		generalAgentSub.PUT("", apicurlSend.HallSendPut)
-		generalAgentSub.PUT("/password", apicurlSend.HallSendPut)
+		generalAgentSub.GET("/list/:Page/:Count/", apiCurlSend.HallSendGet)
+		generalAgentSub.GET("/data/:Id", apiCurlSend.HallSendGet)
+		generalAgentSub.POST("", apiCurlSend.HallSendPost)
+		generalAgentSub.PUT("", apiCurlSend.HallSendPut)
+		generalAgentSub.PUT("/password", apiCurlSend.HallSendPut)
 	}
 	
 	/**
@@ -118,12 +116,12 @@ func InitJellyFishRouting(jellyfishGroup *gin.RouterGroup) {
 	 */
 	agent := jellyfishGroup.Group("/agent")
 	{
-		agent.GET("/list/:GeneralAgent_Id/:Page/:Count/",apicurlSend.HallSendGet)
-		agent.GET("/data/:Id",apicurlSend.HallSendGet)
-		agent.GET(("/dropdownlist/:Site_Code"), apicurlSend.HallSendGet)
-		agent.POST("", apicurlSend.HallSendPost)
-		agent.PUT("", apicurlSend.HallSendPut)
-		agent.PUT("/password", apicurlSend.HallSendPut)
+		agent.GET("/list/:GeneralAgent_Id/:Page/:Count/", apiCurlSend.HallSendGet)
+		agent.GET("/data/:Id", apiCurlSend.HallSendGet)
+		agent.GET(("/dropdownlist/:Site_Code"), apiCurlSend.HallSendGet)
+		agent.POST("", apiCurlSend.HallSendPost)
+		agent.PUT("", apiCurlSend.HallSendPut)
+		agent.PUT("/password", apiCurlSend.HallSendPut)
 	}
 	
 	/**
@@ -131,11 +129,11 @@ func InitJellyFishRouting(jellyfishGroup *gin.RouterGroup) {
 	 */
 	agentSub := jellyfishGroup.Group("/agentSub")
 	{
-		agentSub.GET("/list/:Page/:Count/",apicurlSend.HallSendGet)
-		agentSub.GET("/data/:Id",apicurlSend.HallSendGet)
-		agentSub.POST("", apicurlSend.HallSendPost)
-		agentSub.PUT("", apicurlSend.HallSendPut)
-		agentSub.PUT("/password", apicurlSend.HallSendPut)
+		agentSub.GET("/list/:Page/:Count/", apiCurlSend.HallSendGet)
+		agentSub.GET("/data/:Id", apiCurlSend.HallSendGet)
+		agentSub.POST("", apiCurlSend.HallSendPost)
+		agentSub.PUT("", apiCurlSend.HallSendPut)
+		agentSub.PUT("/password", apiCurlSend.HallSendPut)
 	}
 	
 	
@@ -144,11 +142,11 @@ func InitJellyFishRouting(jellyfishGroup *gin.RouterGroup) {
 	 */
 	authgroup := jellyfishGroup.Group("authGroup")
 	{
-		authgroup.POST("", apicurlSend.HallSendPost)
-		authgroup.PUT((""), apicurlSend.HallSendPut)
-		authgroup.GET("/list/:Page/:Count",apicurlSend.HallSendGet)
-		authgroup.GET("/detail/:Group_Id",apicurlSend.HallSendGet)
-		authgroup.GET("/dropDown",apicurlSend.HallSendGet)
+		authgroup.POST("", apiCurlSend.HallSendPost)
+		authgroup.PUT((""), apiCurlSend.HallSendPut)
+		authgroup.GET("/list/:Page/:Count", apiCurlSend.HallSendGet)
+		authgroup.GET("/detail/:Group_Id", apiCurlSend.HallSendGet)
+		authgroup.GET("/dropDown", apiCurlSend.HallSendGet)
 	}
 	
 	/**
@@ -156,10 +154,10 @@ func InitJellyFishRouting(jellyfishGroup *gin.RouterGroup) {
 	 */
 	agentSystem := jellyfishGroup.Group("/agentSystem")
 	{
-		agentSystem.GET("/siteTotal/:Site_Code/:Page/:Count",apicurlSend.HallSendGet)
-		agentSystem.GET("/shareholderTotal/:Site_Code/:Page/:Count/",apicurlSend.HallSendGet)
-		agentSystem.GET("/generalAgentTotal/:Site_Code/:Page/:Count/",apicurlSend.HallSendGet)
-		agentSystem.GET("/agentTotal/:Site_Code/:Page/:Count/",apicurlSend.HallSendGet)
-		agentSystem.GET("/memberTotal/:Site_Code/:Page/:Count/",apicurlSend.HallSendGet)
+		agentSystem.GET("/siteTotal/:Site_Code/:Page/:Count", apiCurlSend.HallSendGet)
+		agentSystem.GET("/shareholderTotal/:Site_Code/:Page/:Count/", apiCurlSend.HallSendGet)
+		agentSystem.GET("/generalAgentTotal/:Site_Code/:Page/:Count/", apiCurlSend.HallSendGet)
+		agentSystem.GET("/agentTotal/:Site_Code/:Page/:Count/", apiCurlSend.HallSendGet)
+		agentSystem.GET("/memberTotal/:Site_Code/:Page/:Count/", apiCurlSend.HallSendGet)
 	}
 }

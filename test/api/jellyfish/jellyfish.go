@@ -8,7 +8,7 @@ var (
 	hallPutJson = `{"id":"2","name":"testname"}`
 	hallenabledJson = `{"id":"14"}`
 	subListJson = `{"page":"1","count":"10"}`
-	ApiToken = "$2y$10$ymF9wk2auo0h8l9o9XhkFelvXqqU1xLf85b4Os23FEfpH54MM9JDu"
+	ApiToken = `$2y$10$Q8o2tIknzWvnj8rS6AUUaePGJQ14JyW\/JecCaI2oO\/OPmffK7bM2O`
 	createAuthGroupJson = `{"auth_json":[{"10":[1,2,3],"11":[1]}],"role_id":10,"name":"testAuth"}`
 )
 

@@ -4,7 +4,6 @@ package jellyfishdto
  * Api Url : shareholder (GET)
  */
 type ShareholderList struct {
-	Hall_Code string `json:"hall_code"`
 	Site_Code string `json:"site_code"`
 	Status string `json:"status"`
 	Start_Time string `json:"start_time"`
@@ -18,7 +17,6 @@ type ShareholderList struct {
  * Api Url : shareholder/data (GET)
  */
 type ShareholderData struct {
-	Hall_Code string `json:"hall_code"`
 	Id string `json:"id"`
 }
 
@@ -26,7 +24,6 @@ type ShareholderData struct {
  * Api Url : shareholder (POST)
  */
 type CreateShareholder struct {
-	Hall_Code string `json:"hall_code"`
 	Site_Code string `json:"site_code"`
 	Account string `json:"account"`
 	Password string `json:"password"`
@@ -37,8 +34,7 @@ type CreateShareholder struct {
 /**
  * Api Url : shareholder (PUT)
  */
-type UpdataShareholder struct {
-	Hall_Code string `json:"hall_code"`
+type UpdateShareholder struct {
 	Id int `json:"id"`
 	Name string `json:"name"`
 	Take_Part int `json:"take_part"`
@@ -47,8 +43,7 @@ type UpdataShareholder struct {
 /**
  * Api Url : shareholder/password (PUT) 更新股東密碼
  */
-type UpdataShareholderPassword struct {
-	Hall_Code string `json:"hall_code"`
+type UpdateShareholderPassword struct {
 	Id int `json:"id"`
 	Password string `json:"password"`
 }
@@ -57,6 +52,5 @@ type UpdataShareholderPassword struct {
  * Api Url : shareholder/dropdownlist 取得股東清單(下拉選單用)
  */
 type ShareholderDropdownList struct {
-	Hall_Code string `json:"hall_code"`
 	Site_Code string `json:"site_code"`
 }

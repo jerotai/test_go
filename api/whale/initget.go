@@ -48,6 +48,69 @@ func (i *Whale) InitGetApiConfig(apiUrl string) (string, interface{}) {
 	case "/promotion/data":
 		apiDto = &dto.PromotionData{}
 		apiRequestUrl = "promotion/data"
+	case "/article/list":
+		apiDto = &dto.ArticleList{}
+		apiRequestUrl = "article"
+	case "/article/data":
+		apiDto = &dto.ArticleData{}
+		apiRequestUrl = "article/data"
+	case "/article/info":
+		apiDto = &dto.ArticleInfo{}
+		apiRequestUrl = "article/info"
+	case "/image/list":
+		apiDto = &dto.ImageList{}
+		apiRequestUrl = "image"
+	case "/home/list":
+		apiDto = &dto.Home{}
+		apiRequestUrl = "home"
+	case "/home/announcement":
+		apiDto = &dto.HomeAnnouncement{}
+		apiRequestUrl = "home/announcement"
+	case "/home/announcementData":
+		apiDto = &dto.HomeAnnouncementData{}
+		apiRequestUrl = "home/announcement/data"
+	case "/announcement/list":
+		apiDto = &dto.AnnouncementList{}
+		apiRequestUrl = "announcement"
+	case "/announcement/data":
+		apiDto = &dto.AnnouncementData{}
+		apiRequestUrl = "announcement/data"
+	case "/announcement/hall":
+		apiDto = &dto.AnnouncementHall{}
+		apiRequestUrl = "announcement/hall"
+	case "/bookmark/list":
+		apiDto = &dto.BookmarkList{}
+		apiRequestUrl = "bookmark/list"
+	case "/bookmark/type":
+		apiDto = &dto.BookmarkType{}
+		apiRequestUrl = "bookmark/type"
+	case "/bookmark/backEndList":
+		apiDto = &dto.BackEndBookmarkList{}
+		apiRequestUrl = "bookmark"
+	case "/bookmark/data":
+		apiDto = &dto.BookmarkData{}
+		apiRequestUrl = "bookmark/data"
+	case "/bookmark/code":
+		apiDto = &dto.BookmarkCode{}
+		apiRequestUrl = "bookmark/code"
+	case "/bulletin/list":
+		apiDto = &dto.BulletinList{}
+		apiRequestUrl = "bulletin/list"
+	case "/bulletin/backend_list":
+		apiDto = &dto.BackEndBulletinList{}
+		apiRequestUrl = "bulletin"
+	case "/bulletin/data":
+		apiDto = &dto.BulletinData{}
+		apiRequestUrl = "bulletin/data"
+	case "/page_article":
+		apiDto = &dto.PageArticle{}
+		apiRequestUrl = "page_article"
+	case "/page_article/info":
+		apiDto = &dto.PageArticleInfo{}
+		apiRequestUrl = "page_article/info"
+	case "/page_article/code":
+		apiDto = &dto.PageArticleCode{}
+		apiRequestUrl = "page_article/code"
 	default:
 		//todo
 		helper.HelperLog.ErrorLog("[Whale InitGetApiConfig] Url Not Merge : apiUrl: " + apiUrl)

@@ -4,7 +4,6 @@ package octopusdto
  * Api Url : fourthDeposits
  */
 type FourthDepositsList struct {
-	Hall_Code string `json:"hall_code"`
 	Page string `json:"page"`
 	Count string `json:"count"`
 	Status string `json:"status"`
@@ -21,7 +20,6 @@ type FourthDepositsList struct {
  * Api Url : fourthDeposits 四方新增
  */
 type CreateFourthDeposits struct {
-	Site_Code string `json:"site_code"`
 	Fourth_Id int `json:"fourth_id"`
 	Bank_Id int `json:"bank_id"`
 	Amount float64 `json:"amount"`
@@ -31,21 +29,18 @@ type CreateFourthDeposits struct {
  * Api Url : fourthDeposits/limit
  */
 type FourthDepositsLimit struct {
-	Site_Code string `json:"Site_Code"`
 }
 
 /**
  * Api Url : fourthDeposits/menu/thirds
  */
 type FourthDepositsMenuThirds struct {
-	Site_Code string `json:"site_code"`
 }
 
 /**
  * Api Url : fourthDeposits/menu/fourths
  */
 type FourthDepositsMenuFourths struct {
-	Site_Code string `json:"site_code"`
 	Bank_Id string `json:"bank_id"`
 }
 
@@ -53,7 +48,6 @@ type FourthDepositsMenuFourths struct {
  * Api Url : fourthDeposits/menu 四方下拉式選單
  */
 type FourthDepositsMenu struct {
-	Hall_Code string `json:"hall_code"`
 	Site_Code string `json:"site_code"`
 }
 
@@ -61,7 +55,6 @@ type FourthDepositsMenu struct {
  * Api Url : fourthDeposits/reject 四方拒絕
  */
 type FourthDepositsReject struct {
-	Hall_Code string `json:"hall_code"`
 	Txnid string `json:"txnid"`
 	Front_Remark string `json:"front_remark"`
 	Back_Remark string `json:"back_remark"`
@@ -71,7 +64,6 @@ type FourthDepositsReject struct {
  * Api Url : fourthDeposits/audit 四方稽核
  */
 type FourthDepositsAudit struct {
-	Hall_Code string `json:"hall_code"`
 	Txnid string `json:"txnid"`
 }
 
@@ -79,7 +71,6 @@ type FourthDepositsAudit struct {
  * Api Url : fourthDeposits/pass 四方通過
  */
 type FourthDepositsPass struct {
-	Hall_Code string `json:"hall_code"`
 	Txnid string `json:"txnid"`
 	Front_Remark string `json:"front_remark"`
 	Back_Remark string `json:"back_remark"`
@@ -89,7 +80,6 @@ type FourthDepositsPass struct {
  * Api Url : fourthDeposits/unlock (PUT) 四方入款列表頁解鎖
  */
 type FourthDepositsUnlock struct {
-	Hall_Code string `json:"hall_code"`
-	Start_Time string `json:"start_time"`
-	End_Time string `json:"end_time"`
+	Txnid string `json:"txnid"`
+	Type int `json:"type"`
 }

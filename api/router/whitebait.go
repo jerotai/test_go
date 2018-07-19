@@ -7,7 +7,6 @@ import (
 	"Stingray/core/apicurl"
 )
 
-
 func InitWhitebaitRouting(whitebaitGroup *gin.RouterGroup) {
 	apiConf := helper.ApiSetting("whitebait_service")
 	router := whitebait.New()
@@ -18,38 +17,38 @@ func InitWhitebaitRouting(whitebaitGroup *gin.RouterGroup) {
 	apiConfInit.InitPutApiConfig = router.InitPutApiConfig
 	apiConfInit.InitDeleteApiConfig = router.InitDeleteApiConfig
 	
-	apicurlSend := apicurl.New(apiConf, apiConfInit)
-
+	var apiCurlSend = apicurl.GetCurlSend(apiConf, apiConfInit)
 	
 	/**
 	 * User Group
 	 */
 	user := whitebaitGroup.Group("/user")
 	{
-		user.POST("/login", apicurlSend.WhitebaitLogin)
+		user.POST("/login", apiCurlSend.WhitebaitLogin)
 		
-		user.GET("/promo_code/:Promotion_Code/:Promotion_Type", apicurlSend.SiteSendGet)
-		user.GET("/passwordWithdrawCheck", apicurlSend.SiteSendGet)
-		user.GET("/register", apicurlSend.SiteSendGet)
-		user.GET("/plat", apicurlSend.SiteSendGet)
-		user.GET("/data", apicurlSend.SiteSendGet)
-		user.GET("/balance", apicurlSend.SiteSendGet)
-		user.GET("/company_bank", apicurlSend.SiteSendGet)
-		user.GET("/transfer", apicurlSend.SiteSendGet)
-		user.GET("/alive", apicurlSend.SiteSendGet)
-		user.POST("/register", apicurlSend.WhitebaitRegister)
-		user.POST("/passwordWithdraw", apicurlSend.SiteSendPost)
-		user.PUT("/password", apicurlSend.SiteSendPut)
-		user.PUT("/passwordWithdraw", apicurlSend.SiteSendPut)
+		user.GET("/promo_code/:Promotion_Code/:Promotion_Type", apiCurlSend.SiteSendGet)
+		user.GET("/passwordWithdrawCheck", apiCurlSend.SiteSendGet)
+		user.GET("/register", apiCurlSend.SiteSendGet)
+		user.GET("/plat", apiCurlSend.SiteSendGet)
+		user.GET("/data", apiCurlSend.SiteSendGet)
+		user.GET("/balance", apiCurlSend.SiteSendGet)
+		user.GET("/company_bank", apiCurlSend.SiteSendGet)
+		user.GET("/transfer", apiCurlSend.SiteSendGet)
+		user.GET("/alive", apiCurlSend.SiteSendGet)
+		user.POST("/register", apiCurlSend.WhitebaitRegister)
+		user.POST("/passwordWithdraw", apiCurlSend.SiteSendPost)
+		user.PUT("/password", apiCurlSend.SiteSendPut)
+		user.PUT("/passwordWithdraw", apiCurlSend.SiteSendPut)
 		
-		user.GET("/list/:Site_Code/:Page/:Count/", apicurlSend.HallSendGet)
-		user.GET("/info/:id", apicurlSend.HallSendGet)
-		user.GET("/registerSetting/:Site_code", apicurlSend.HallSendGet)
-		user.POST("/create", apicurlSend.HallSendPost)
-		user.PUT("/info", apicurlSend.HallSendPut)
-		user.PUT("/registerSetting", apicurlSend.HallSendPut)
-		user.PUT("/passwordWithdrawUpdate", apicurlSend.HallSendPut)
-		user.PUT("/passwordUpdate", apicurlSend.HallSendPut)
+		user.GET("/list/:Site_Code/:Page/:Count/", apiCurlSend.HallSendGet)
+		user.GET("/blurry/:Site_Code/:Account", apiCurlSend.HallSendGet)
+		user.GET("/info/:id", apiCurlSend.HallSendGet)
+		user.GET("/registerSetting/:Site_code", apiCurlSend.HallSendGet)
+		user.POST("/create", apiCurlSend.HallSendPost)
+		user.PUT("/info", apiCurlSend.HallSendPut)
+		user.PUT("/registerSetting", apiCurlSend.HallSendPut)
+		user.PUT("/passwordWithdrawUpdate", apiCurlSend.HallSendPut)
+		user.PUT("/passwordUpdate", apiCurlSend.HallSendPut)
 	}
 	
 	/**
@@ -57,22 +56,26 @@ func InitWhitebaitRouting(whitebaitGroup *gin.RouterGroup) {
 	 */
 	userLevel := whitebaitGroup.Group("user_level")
 	{
-		userLevel.GET("/list/:Site_code", apicurlSend.HallSendGet)
-		userLevel.GET("/data/:Id", apicurlSend.HallSendGet)
-		userLevel.GET("/amount/:Id/:Type", apicurlSend.HallSendGet)
-		userLevel.GET("/payment/:Id", apicurlSend.HallSendGet)
-		userLevel.GET("/company_bank/:Id", apicurlSend.HallSendGet)
+		userLevel.GET("/list/:Site_code", apiCurlSend.HallSendGet)
+		userLevel.GET("/data/:Id", apiCurlSend.HallSendGet)
+		userLevel.GET("/amount/:Id/:Type", apiCurlSend.HallSendGet)
+		userLevel.GET("/payment/:Id", apiCurlSend.HallSendGet)
+		userLevel.GET("/company_bank/:Id", apiCurlSend.HallSendGet)
+		userLevel.GET("/user_list/:Id/:Page/:Count", apiCurlSend.HallSendGet)
+		userLevel.GET("/dropdownList/:Site_code", apiCurlSend.HallSendGet)
+		userLevel.GET("/userPreview/:User_Ids/:User_Level_Id", apiCurlSend.HallSendGet)
+		userLevel.GET("/batchPreview/:Before_User_Level_Id/:After_User_Level_Id", apiCurlSend.HallSendGet)
 		
-		userLevel.POST("", apicurlSend.HallSendPost)
+		userLevel.POST("", apiCurlSend.HallSendPost)
 		
-		userLevel.PUT("", apicurlSend.HallSendPut)
-		userLevel.PUT("/amount", apicurlSend.HallSendPut)
-		userLevel.PUT("/payment", apicurlSend.HallSendPut)
-		userLevel.PUT("/company_bank", apicurlSend.HallSendPut)
-		userLevel.PUT("/user", apicurlSend.HallSendPut)
-		userLevel.PUT("/batch", apicurlSend.HallSendPut)
+		userLevel.PUT("", apiCurlSend.HallSendPut)
+		userLevel.PUT("/amount", apiCurlSend.HallSendPut)
+		userLevel.PUT("/payment", apiCurlSend.HallSendPut)
+		userLevel.PUT("/company_bank", apiCurlSend.HallSendPut)
+		userLevel.PUT("/user", apiCurlSend.HallSendPut)
+		userLevel.PUT("/batch", apiCurlSend.HallSendPut)
 		
-		userLevel.DELETE("", apicurlSend.HallSendDelete)
+		userLevel.DELETE("", apiCurlSend.HallSendDelete)
 	}
 	
 	/**
@@ -80,7 +83,7 @@ func InitWhitebaitRouting(whitebaitGroup *gin.RouterGroup) {
 	 */
 	bank := whitebaitGroup.Group("/bank")
 	{
-		bank.GET("/transfer", apicurlSend.SiteSendGet)
-		bank.GET("/third", apicurlSend.SiteSendGet)
+		bank.GET("/transfer", apiCurlSend.SiteSendGet)
+		bank.GET("/third", apiCurlSend.SiteSendGet)
 	}
 }

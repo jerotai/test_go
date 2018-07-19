@@ -17,28 +17,38 @@ func InitLophiiformesRouting(routerGroup *gin.RouterGroup) {
 	apiConfInit.InitPutApiConfig = router.InitPutApiConfig
 	apiConfInit.InitDeleteApiConfig = router.InitDeleteApiConfig
 	
-	apicurlSend := apicurl.New(apiConf, apiConfInit)
+	var apiCurlSend = apicurl.GetCurlSend(apiConf, apiConfInit)
 	
 	/**
 	 * bank list
 	 */
-	routerGroup.GET("/transfer_bank/list", apicurlSend.HallSendGet)
-	routerGroup.GET("/third_bank/list", apicurlSend.HallSendGet)
+	routerGroup.GET("/transfer_bank/list", apiCurlSend.HallSendGet)
+	routerGroup.GET("/third_bank/list", apiCurlSend.HallSendGet)
+	
+	/**
+	 * bank list
+	 */
+	bankBank := routerGroup.Group("/bank_list")
+	{
+		bankBank.GET("/fourthThird/:Code", apiCurlSend.HallSendGet)
+		bankBank.GET("/fourthTransfer/:Code", apiCurlSend.HallSendGet)
+	}
+	
 	
 	/**
 	 * company_bank Group
 	 */
 	companyBank := routerGroup.Group("/company_bank")
 	{
-		companyBank.GET("/list/:Site_Code", apicurlSend.HallSendGet)
-		companyBank.GET("/data/:Id", apicurlSend.HallSendGet)
-		companyBank.GET("/dropdownList/:Site_Code", apicurlSend.HallSendGet)
+		companyBank.GET("/list/:Site_Code", apiCurlSend.HallSendGet)
+		companyBank.GET("/data/:Id", apiCurlSend.HallSendGet)
+		companyBank.GET("/dropdownList/:Site_Code", apiCurlSend.HallSendGet)
 		
-		companyBank.POST("", apicurlSend.HallSendPost)
+		companyBank.POST("", apiCurlSend.HallSendPost)
 		
-		companyBank.PUT("", apicurlSend.HallSendPut)
+		companyBank.PUT("", apiCurlSend.HallSendPut)
 		
-		companyBank.DELETE("", apicurlSend.HallSendDelete)
+		companyBank.DELETE("", apiCurlSend.HallSendDelete)
 	}
 	
 	/**
@@ -46,17 +56,17 @@ func InitLophiiformesRouting(routerGroup *gin.RouterGroup) {
 	 */
 	userBank := routerGroup.Group("/user_bank")
 	{
-		userBank.GET("/list", apicurlSend.SiteSendGet)
-		userBank.GET("/info/:Id", apicurlSend.SiteSendGet)
-		userBank.POST("", apicurlSend.SiteSendPost)
-		userBank.PUT("", apicurlSend.SiteSendPut)
-		userBank.DELETE("", apicurlSend.SiteSendDelete)
+		userBank.GET("/list", apiCurlSend.SiteSendGet)
+		userBank.GET("/info/:Id", apiCurlSend.SiteSendGet)
+		userBank.POST("", apiCurlSend.SiteSendPost)
+		userBank.PUT("", apiCurlSend.SiteSendPut)
+		userBank.DELETE("", apiCurlSend.SiteSendDelete)
 		
-		userBank.GET("/backendList/:User_Id", apicurlSend.HallSendGet)
-		userBank.GET("/backendInfo/:Id/:User_Id", apicurlSend.HallSendGet)
-		userBank.POST("/backend", apicurlSend.HallSendPost)
-		userBank.PUT("/backend", apicurlSend.HallSendPut)
-		userBank.DELETE("/backend", apicurlSend.HallSendDelete)
+		userBank.GET("/backendList/:User_Id", apiCurlSend.HallSendGet)
+		userBank.GET("/backendInfo/:Id/:User_Id", apiCurlSend.HallSendGet)
+		userBank.POST("/backend", apiCurlSend.HallSendPost)
+		userBank.PUT("/backend", apiCurlSend.HallSendPut)
+		userBank.DELETE("/backend", apiCurlSend.HallSendDelete)
 	}
 	
 	/**
@@ -64,16 +74,16 @@ func InitLophiiformesRouting(routerGroup *gin.RouterGroup) {
 	 */
 	paymentConfig := routerGroup.Group("/payment_config")
 	{
-		paymentConfig.GET("/list", apicurlSend.HallSendGet)
-		paymentConfig.GET("/default", apicurlSend.HallSendGet)
-		paymentConfig.GET("/info/:Id", apicurlSend.HallSendGet)
-		paymentConfig.GET("/banks/:Fourth_Id", apicurlSend.HallSendGet)
+		paymentConfig.GET("/list/:Site_Code", apiCurlSend.HallSendGet)
+		paymentConfig.GET("/default", apiCurlSend.HallSendGet)
+		paymentConfig.GET("/info/:Id", apiCurlSend.HallSendGet)
+		paymentConfig.GET("/banks/:Fourth_Id", apiCurlSend.HallSendGet)
 		
-		paymentConfig.POST("", apicurlSend.HallSendPost)
+		paymentConfig.POST("", apiCurlSend.HallSendPost)
 		
-		paymentConfig.PUT("", apicurlSend.HallSendPut)
-		paymentConfig.PUT("/banks", apicurlSend.HallSendPut)
+		paymentConfig.PUT("", apiCurlSend.HallSendPut)
+		paymentConfig.PUT("/banks", apiCurlSend.HallSendPut)
 		
-		paymentConfig.DELETE("", apicurlSend.HallSendDelete)
+		paymentConfig.DELETE("", apiCurlSend.HallSendDelete)
 	}
 }

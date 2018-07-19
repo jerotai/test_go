@@ -31,6 +31,64 @@ type ApiResponse struct {
 	Message string `json:"message"`
 }
 
+type JSONInt struct {
+	Value int
+	Valid bool
+	Set   bool
+}
+
+/**
+ * 使用 *int 表示當前端未送參數時 將過濾 不加入傳送參數 (int 空值時 預設為0)
+ */
+func (i *JSONInt) UnmarshalJSON(data []byte) error {
+	// If this method was called, the value was set.
+	i.Set = true
+	
+	if string(data) == "null" {
+		// The key was set to null
+		i.Valid = false
+		return nil
+	}
+	
+	// The key isn't set to null
+	var temp int
+	if err := json.Unmarshal(data, &temp); err != nil {
+		return err
+	}
+	i.Value = temp
+	i.Valid = true
+	return nil
+}
+
+type JSONString struct {
+	Value string
+	Valid bool
+	Set   bool
+}
+
+/**
+ * 使用 *string 表示當前端未送參數時 將過濾 不加入傳送參數 (int 空值時 預設為0)
+ */
+func (i *JSONString) UnmarshalJSON(data []byte) error {
+	// If this method was called, the value was set.
+	i.Set = true
+	
+	if string(data) == "null" {
+		// The key was set to null
+		i.Valid = false
+		return nil
+	}
+	
+	// The key isn't set to null
+	var temp string
+	if err := json.Unmarshal(data, &temp); err != nil {
+		return err
+	}
+	i.Value = temp
+	i.Valid = true
+	return nil
+}
+
 func GetToken(g *gin.Context) string {
 	return g.Request.Header.Get("Api-Token")
 }
@@ -41,18 +99,56 @@ func GetUserIp(g *gin.Context) string {
 }
 
 /**
+ * 取得前台user 呼叫 domian
+ */
+func GetUserDomain(g *http.Request, isPrefix bool) (string) {
+	if g.Header.Get("Origin") != "" {
+		domain_url := strings.Split(g.Header.Get("Origin"), "://")
+		domainUrlPort := strings.Split(domain_url[1], ":")[0]
+		domainUrl := strings.Split(domainUrlPort, "/")[0]
+		
+		helper.HelperLog.TraceLog(fmt.Sprintf("[parse-GetUserDomain] domain_url: %s", domain_url))
+		helper.HelperLog.TraceLog(fmt.Sprintf("[parse-GetUserDomain] domainUrl: %s", domainUrl))
+		
+		if isPrefix == true {
+			return domain_url[0] + "://" + domainUrl
+		} else {
+			return domainUrl
+		}
+	}
+	
+	if g.Header.Get("Referer") != "" {
+		referer := strings.Split(g.Header.Get("Referer"), "://")
+		var domainUrlPort = ""
+		if len(referer) > 1 {
+			domainUrlPort = strings.Split(referer[1], ":")[0]
+			
+		} else {
+			domainUrlPort = strings.Split(g.Header.Get("Referer"), ":")[0]
+		}
+		
+		domainUrl := strings.Split(domainUrlPort, "/")[0]
+		
+		helper.HelperLog.TraceLog(fmt.Sprintf("[parse-GetUserDomain] referer: %s", referer))
+		helper.HelperLog.TraceLog(fmt.Sprintf("[parse-GetUserDomain] refererUrl: %s", domainUrl))
+		
+		if isPrefix == true {
+			return referer[0] + "://" + domainUrl
+		} else {
+			return domainUrl
+		}
+	}
+	
+	return ""
+}
+
+/**
  * 取得 API GET 參數
  */
-func DataParseByGet(g *gin.Context, apiDto interface{}) error {
+func DataParseByGet(g *gin.Context, apiDto interface{}) (apiMap map[string]interface{}, err error) {
 	datas := make(map[string]interface{})
-	/*
-	decoder := schema.NewDecoder()
-	err := decoder.Decode(apiDto, g.Request.URL.Query())
-	if err != nil {
-		//後續處理
-		fmt.Println(err)
-	}
-	*/
+	apiMap = make(map[string]interface{})
+	
 	g.ShouldBindQuery(apiDto)
 	
 	for _, param := range g.Params {
@@ -65,9 +161,45 @@ func DataParseByGet(g *gin.Context, apiDto interface{}) error {
 		//後續處理
 		helper.HelperLog.ErrorLog("[parse-DataParseByGet] " + g.Request.URL.Path + ": " + err.Error())
 	}
+	
 	json.Unmarshal(tmpJson, apiDto)
 	
-	return err
+	if apiDto == nil {
+		err = errors.New("apiDto is nil")
+	}
+	
+	if t := reflect.TypeOf(apiDto); t.Kind() == reflect.Ptr {
+		
+		v := reflect.ValueOf(apiDto)
+		
+		for i := 0; i < t.Elem().NumField(); i++ {
+			fv := t.Elem().Field(i)
+			tagMap := strings.Split(string(fv.Tag), ":")
+			tag := fv.Tag.Get(tagMap[0]) //get struct tag type
+			
+			switch v.Elem().Field(i).Type().String() {
+			case "int", "int32", "int64":
+				apiMap[tag] = v.Elem().Field(i).Int()
+			case "*int","*string":
+				if v.Elem().Field(i).IsNil() != true {
+					apiMap[tag] = v.Elem().Field(i).Elem()
+				}
+			case "float", "float32", "float64":
+				apiMap[tag] = v.Elem().Field(i).Float()
+			case "string":
+				if(v.Elem().Field(i).String() != ""){
+					apiMap[tag] = v.Elem().Field(i).String()
+				}
+			case "FileHeader":
+				apiMap[tag] = v.Elem().Field(i).Bytes()
+			default:
+				apiMap[tag] = v.Elem().Field(i)
+			}
+		}
+	}
+	
+	helper.HelperLog.TraceLog(fmt.Sprintf("[parse-DataParseByGet] apiMap: %s", apiMap))
+	return
 }
 
 /**
@@ -122,28 +254,44 @@ func MultiPartDataParse(g *gin.Context, apiDto interface{}, stationType string, 
 	return &byteBuf, mpWriter.FormDataContentType()
 }
 
+
 /**
  * 取得 API POST PUT DELETE 參數
  */
-func DataParse(g *gin.Context, apiDto interface{}) error {
+func DataParse(g *gin.Context, apiDto interface{}) (apiMap map[string]interface{}, err error) {
+	if apiDto == nil {
+		err = errors.New("apiDto is nil")
+	}
+	
+	var inputData = make(map[string]interface{})
+	apiMap = make(map[string]interface{})
+	
 	body, err := ioutil.ReadAll(g.Request.Body)
 	helper.HelperLog.TraceLog("[parse-DataParse] body: " + string(body))
+	
 	if err != nil {
 		//後續處理
 		helper.HelperLog.ErrorLog(err.Error())
 	}
 	
-	json.Unmarshal(body, apiDto)
-	helper.HelperLog.TraceLog(fmt.Sprintf("[parse-DataParse] Unmarshal apiDto: %s", apiDto))
-	return err
+	json.Unmarshal(body, &inputData)
+	
+	apiMap = conformDataParse(apiDto, inputData)
+	
+	helper.HelperLog.TraceLog(fmt.Sprintf("[parse-DataParse] Unmarshal apiDto: %s", apiMap))
+	return
 }
 
 /**
- * 取得 rsa加密的post 參數
+ * 取得 rsa加密的post,put,delete 參數
  */
-func DataParseByRsa(g *gin.Context, apiDto interface{}) error {
+func DataParseByRsa(g *gin.Context, apiDto interface{}) (apiMap map[string]interface{}, err error) {
+	var inputData = make(map[string]interface{})
+	apiMap = make(map[string]interface{})
+	
 	body, err := ioutil.ReadAll(g.Request.Body)
-	helper.HelperLog.TraceLog("[parse-DataParseByRsa] body: " + string(body))
+	helper.HelperLog.TraceLog("[parse-DataParseByRsa] Input Body: " + string(body))
+	
 	if err != nil {
 		//後續處理
 		helper.HelperLog.ErrorLog("[parse-DataParseByRsa] Body" + g.Request.URL.Path + ": " + err.Error())
@@ -155,33 +303,33 @@ func DataParseByRsa(g *gin.Context, apiDto interface{}) error {
 	rsaKey := rsaRedisService.GetTokenRsaPrivateKey(token)
 	
 	if rsaKey == "" {
-		return errors.New("Rsa Key Is Nil")
+		return apiMap, errors.New("Rsa Key Is Nil")
 	}
 	
 	//input rsa encode
 	rsadecode, err := helper.RsaDecryptByKey(rsaKey, body)
-	helper.HelperLog.TraceLog(fmt.Sprintf("[parse-DataParseByRsa] RsaDecryptByKey body: %s", string(body)))
+	
+	helper.HelperLog.TraceLog(fmt.Sprintf("[parse-DataParseByRsa] RsaDecryptByKey body: %s", rsadecode))
 
 	if err != nil {
 		//todo 錯誤處理
 		helper.HelperLog.ErrorLog("[parse-DataParseByRsa] Error: " + g.Request.URL.Path + ": " + err.Error())
-		return errors.New(err.Error())
+		return apiMap, errors.New(err.Error())
 	}
 	
-	json.Unmarshal(rsadecode, apiDto)
-	helper.HelperLog.TraceLog(fmt.Sprintf("[parse-DataParseByRsa] Unmarshal apiDto: %s", apiDto))
-	return err
+	json.Unmarshal(rsadecode, &inputData)
+	
+	apiMap = conformDataParse(apiDto, inputData)
+
+	helper.HelperLog.TraceLog(fmt.Sprintf("[parse-DataParseByRsa] Unmarshal apiMap: %s", apiMap))
+	return
 }
 
 /**
- * 將 2層dto Struct 轉換為 map interface
+ * 整合 api input data by apiDto
  */
-func TowLayerDtoToMap(apiDto interface{}) (apiMap map[string]interface{}, err error) {
-	apiMap = make(map[string]interface{})
-	
-	if apiDto == nil {
-		err = errors.New("apiDto is nil")
-	}
+func conformDataParse(apiDto interface{}, inputData map[string]interface{}) (map[string]interface{}) {
+	var apiMap = make(map[string]interface{})
 	
 	if t := reflect.TypeOf(apiDto); t.Kind() == reflect.Ptr {
 		
@@ -193,75 +341,16 @@ func TowLayerDtoToMap(apiDto interface{}) (apiMap map[string]interface{}, err er
 			tag := fv.Tag.Get(tagMap[0]) //get struct tag type
 			
 			switch v.Elem().Field(i).Type().String() {
-			case "int":
-				apiMap[tag] = v.Elem().Field(i).Int()
-			case "int32":
-				apiMap[tag] = v.Elem().Field(i).Int()
-			case "int64":
-				apiMap[tag] = v.Elem().Field(i).Int()
-			case "float":
-				apiMap[tag] = v.Elem().Field(i).Float()
-			case "float32":
-				apiMap[tag] = v.Elem().Field(i).Float()
-			case "float64":
-				apiMap[tag] = v.Elem().Field(i).Float()
-			case "string":
-				apiMap[tag] = v.Elem().Field(i).String()
-			case "FileHeader":
-				apiMap[tag] = v.Elem().Field(i).Bytes()
+			//如果有特別的型別需要確認 可以加上特別處理方式
 			default:
-				apiMap[tag] = v.Elem().Field(i)
+				if(inputData[tag] != nil) {
+					apiMap[tag] = inputData[tag]
+				}
 			}
 		}
 	}
 	
-	err = errors.New("illegal input")
-	return
-}
-
-/**
- * 將 dto Struct 轉換為 map interface
- */
-func DtoToMap(apiDto interface{}) (apiMap map[string]interface{}, err error) {
-	apiMap = make(map[string]interface{})
-	
-	if apiDto == nil {
-		err = errors.New("apiDto is nil")
-	}
-	
-	if t := reflect.TypeOf(apiDto); t.Kind() == reflect.Struct {
-		
-		v := reflect.ValueOf(apiDto)
-		
-		for i := 0; i < t.NumField(); i++ {
-			fv := t.Field(i)
-			tagMap := strings.Split(string(fv.Tag), ":")
-			tag := fv.Tag.Get(tagMap[0]) //get struct tag type
-			
-			switch v.Field(i).Type().String() {
-			case "int":
-				apiMap[tag] = v.Field(i).Int()
-			case "int32":
-				apiMap[tag] = v.Field(i).Int()
-			case "int64":
-				apiMap[tag] = v.Field(i).Int()
-			case "float":
-				apiMap[tag] = v.Field(i).Float()
-			case "float32":
-				apiMap[tag] = v.Field(i).Float()
-			case "float64":
-				apiMap[tag] = v.Field(i).Float()
-			case "string":
-				apiMap[tag] = v.Field(i).String()
-			case "FileHeader":
-				apiMap[tag] = v.Elem().Field(i).String()
-			default:
-				apiMap[tag] = v.Field(i)
-			}
-		}
-	}
-	
-	return
+	return apiMap
 }
 
 /**
@@ -272,26 +361,7 @@ func StationCodeParse(g *http.Request) string {
 	//start domain list redis service
 	domain := domain.DomainsService()
 	
-	if g.Header.Get("origin") != "" {
-		domain_url := strings.Split(g.Header.Get("Origin"), "://")
-		helper.HelperLog.TraceLog(fmt.Sprintf("[parse-StationCodeParse] domain_url: %s", domain_url))
-		domainUrl := strings.Split(domain_url[1], ":")[0]
-		helper.HelperLog.TraceLog(fmt.Sprintf("[parse-StationCodeParse] domainUrl: %s", domainUrl))
-		return domain.GetStationCodeByDomain(domainUrl)
-	}
-	
-	if g.Header.Get("Referer") != "" {
-		referer := strings.Split(g.Header.Get("Referer"), "://")
-		refererUrl := ""
-		if len(referer) > 1 {
-			refererUrl = strings.Split(referer[1], ":")[0]
-			
-		} else {
-			refererUrl = strings.Split(g.Header.Get("Referer"), ":")[0]
-		}
-		helper.HelperLog.TraceLog(fmt.Sprintf("[parse-StationCodeParse] refererUrl: %s", refererUrl))
-		return domain.GetStationCodeByDomain(refererUrl)
-	}
-	
-	return ""
+	domainUrl := GetUserDomain(g, false)
+	fmt.Println("domainUrl", domainUrl)
+	return domain.GetStationCodeByDomain(domainUrl)
 }

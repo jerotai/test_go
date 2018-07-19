@@ -4,7 +4,6 @@ package jellyfishdto
  * Api Url : generalAgentSub (GET)
  */
 type GeneralAgentSubList struct {
-	Hall_Code string `json:"hall_code"`
 	Status string `json:"status"`
 	Account string `json:"account"`
 	Name string `json:"name"`
@@ -17,7 +16,6 @@ type GeneralAgentSubList struct {
  * Api Url : generalAgentSub/data (GET)
  */
 type GeneralAgentSubData struct {
-	Hall_Code string `json:"hall_code"`
 	Id string `json:"id"`
 }
 
@@ -25,7 +23,6 @@ type GeneralAgentSubData struct {
  * Api Url : generalAgentSub (POST)
  */
 type CreateGeneralAgentSub struct {
-	Hall_Code string `json:"hall_code"`
 	GeneralAgent_Id int `json:"generalAgent_id"`
 	Account string `json:"account"`
 	Password string `json:"password"`
@@ -36,8 +33,7 @@ type CreateGeneralAgentSub struct {
 /**
  * Api Url : generalAgentSub (PUT)
  */
-type UpdataGeneralAgentSub struct {
-	Hall_Code string `json:"hall_code"`
+type UpdateGeneralAgentSub struct {
 	Id int `json:"id"`
 	Name string `json:"name"`
 	Authority int `json:"authority"`
@@ -47,8 +43,7 @@ type UpdataGeneralAgentSub struct {
 /**
  * Api Url : GeneralAgentSub/password 更新總代子帳號密碼
  */
-type UpdataGeneralAgentSubPassword struct {
-	Hall_Code string `json:"hall_code"`
+type UpdateGeneralAgentSubPassword struct {
 	Id int `json:"id"`
 	Password string `json:"password"`
 }

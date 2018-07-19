@@ -60,6 +60,18 @@ func (i *Whitebait) InitGetApiConfig(apiUrl string) (string, interface{}){
 	case "/user_level/company_bank":
 		apiDto = &dto.UserLevelCompanyBankList{}
 		apiRequestUrl = "user_level/company_bank"
+	case "/user_level/user_list":
+		apiDto = &dto.BackEndUserLevelUserList{}
+		apiRequestUrl = "user_level/user_list"
+	case "/user_level/userPreview":
+		apiDto = &dto.UserLevelUserPreview{}
+		apiRequestUrl = "user_level/user/preview"
+	case "/user_level/batchPreview":
+		apiDto = &dto.UserLevelBatchPreview{}
+		apiRequestUrl = "user_level/batch/preview"
+	case "/user_level/dropdownList":
+		apiDto = &dto.UserLevelDropdownList{}
+		apiRequestUrl = "user_level/dropdownlist"
 	case "/bank/transfer":
 		apiDto = &dto.BankTransger{}
 		apiRequestUrl = "bank/transfer"
@@ -69,6 +81,9 @@ func (i *Whitebait) InitGetApiConfig(apiUrl string) (string, interface{}){
 	case "/user/passwordWithdrawCheck":
 		apiDto = &dto.UserPasswordWithdrawCheck{}
 		apiRequestUrl = "user/password/withdraw/check"
+	case "/user/blurry":
+		apiDto = &dto.UserBlurry{}
+		apiRequestUrl = "user/blurry"
 	default:
 		//todo
 		helper.HelperLog.ErrorLog("[Whitebait InitGetApiConfig] Url Not Merge : apiUrl: " + apiUrl)

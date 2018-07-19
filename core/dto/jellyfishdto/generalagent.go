@@ -4,7 +4,6 @@ package jellyfishdto
  * Api Url : generalAgent (GET)
  */
 type GeneralAgentList struct {
-	Hall_Code string `json:"hall_code"`
 	Shareholder_Id string `json:"shareholder_id"`
 	Status string `json:"status"`
 	Name string `json:"name"`
@@ -25,7 +24,6 @@ type GeneralAgentData struct {
  * Api Url : generalAgent (POST)
  */
 type CreateGeneralAgent struct {
-	Hall_Code string `json:"hall_code"`
 	Shareholder_Id int `json:"shareholder_id"`
 	Account string `json:"account"`
 	Password string `json:"password"`
@@ -36,8 +34,7 @@ type CreateGeneralAgent struct {
 /**
  * Api Url : generalAgent (PUT)
  */
-type UpdataGeneralAgent struct {
-	Hall_Code string `json:"hall_code"`
+type UpdateGeneralAgent struct {
 	Id int `json:"id"`
 	Name string `json:"name"`
 	Take_Part int `json:"take_part"`
@@ -46,8 +43,7 @@ type UpdataGeneralAgent struct {
 /**
  * Api Url : generalAgent/password 更新新總代密碼
  */
-type UpdataGeneralAgentPassword struct {
-	Hall_Code string `json:"hall_code"`
+type UpdateGeneralAgentPassword struct {
 	Id int `json:"id"`
 	Password string `json:"password"`
 }
@@ -56,6 +52,5 @@ type UpdataGeneralAgentPassword struct {
  * Api Url : generalAgent/dropdownlist 取得總代理清單(下拉選單用)
  */
 type GeneralAgentDropdownList struct {
-	Hall_Code string `json:"hall_code"`
 	Site_Code string `json:"site_code"`
 }

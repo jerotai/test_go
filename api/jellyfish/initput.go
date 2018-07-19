@@ -17,61 +17,61 @@ func (j *JellyFish) InitPutApiConfig(apiUrl string) (string, interface{}) {
 	
 	switch apiUrl {
 	case "/password":
-		apiDto = &dto.UpdataPassWord{}
+		apiDto = &dto.UpdatePassWord{}
 		apiRequestUrl = "password"
 	case "/hall":
-		apiDto = &dto.UpdataHall{}
+		apiDto = &dto.UpdateHall{}
 		apiRequestUrl = "hall"
 	case "/hall/password":
-		apiDto = &dto.UpdataHallPassword{}
+		apiDto = &dto.UpdateHallPassword{}
 		apiRequestUrl = "hall/password"
 	case "/hall/enabled":
 		apiDto = &dto.EnabledHall{}
 		apiRequestUrl = "hall/enabled"
 	case "/shareholder":
-		apiDto = &dto.UpdataShareholder{}
+		apiDto = &dto.UpdateShareholder{}
 		apiRequestUrl = "shareholder"
 	case "/shareholder/password":
-		apiDto = &dto.UpdataShareholderPassword{}
+		apiDto = &dto.UpdateShareholderPassword{}
 		apiRequestUrl = "shareholder/password"
 	case "/shareholderSub":
-		apiDto = &dto.UpdataShareholderSub{}
+		apiDto = &dto.UpdateShareholderSub{}
 		apiRequestUrl = "shareholderSub"
 	case "/shareholderSub/password":
-		apiDto = &dto.UpdataShareholderSubPassword{}
+		apiDto = &dto.UpdateShareholderSubPassword{}
 		apiRequestUrl = "shareholderSub/password"
 	case "/hallSub":
-		apiDto = &dto.UpdataHallSub{}
+		apiDto = &dto.UpdateHallSub{}
 		apiRequestUrl = "hallSub"
 	case "/hallSub/password":
-		apiDto = &dto.UpdataHallSubPassword{}
+		apiDto = &dto.UpdateHallSubPassword{}
 		apiRequestUrl = "hallSub/password"
 	case "/authGroup":
-		apiDto = &dto.UpdataAuthGroup{}
+		apiDto = &dto.UpdateAuthGroup{}
 		apiRequestUrl = "authGroup"
 	case "/generalAgent":
-		apiDto = &dto.UpdataGeneralAgent{}
+		apiDto = &dto.UpdateGeneralAgent{}
 		apiRequestUrl = "generalAgent"
 	case "/generalAgent/password":
-		apiDto = &dto.UpdataGeneralAgentPassword{}
+		apiDto = &dto.UpdateGeneralAgentPassword{}
 		apiRequestUrl = "generalAgent/password"
 	case "/generalAgentSub":
-		apiDto = &dto.UpdataGeneralAgentSub{}
+		apiDto = &dto.UpdateGeneralAgentSub{}
 		apiRequestUrl = "generalAgentSub"
 	case "/generalAgentSub/password":
-		apiDto = &dto.UpdataGeneralAgentSubPassword{}
+		apiDto = &dto.UpdateGeneralAgentSubPassword{}
 		apiRequestUrl = "generalAgentSub/password"
 	case "/agent":
-		apiDto = &dto.UpdataAgent{}
+		apiDto = &dto.UpdateAgent{}
 		apiRequestUrl = "agent"
 	case "/agent/password":
-		apiDto = &dto.UpdataAgentPassword{}
+		apiDto = &dto.UpdateAgentPassword{}
 		apiRequestUrl = "agent/password"
 	case "/agentSub":
-		apiDto = &dto.UpdataAgentSub{}
+		apiDto = &dto.UpdateAgentSub{}
 		apiRequestUrl = "agentSub"
 	case "/agentSub/password":
-		apiDto = &dto.UpdataAgentSubPassword{}
+		apiDto = &dto.UpdateAgentSubPassword{}
 		apiRequestUrl = "agentSub/password"
 	default:
 		//todo

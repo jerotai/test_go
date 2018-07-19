@@ -21,6 +21,12 @@ func (l *Lophiiformes) InitGetApiConfig(apiUrl string) (string, interface{}){
 	case "/third_bank/list":
 		apiDto = &dto.BankListTthird{}
 		apiRequestUrl = "bank_list/third"
+	case "/bank_list/fourthThird":
+		apiDto = &dto.BankListFourthThird{}
+		apiRequestUrl = "bank_list/fourth_third"
+	case "/bank_list/fourthTransfer":
+		apiDto = &dto.BankListfourthTransfer{}
+		apiRequestUrl = "bank_list/fourth_transfer"
 	case "/company_bank/list":
 		apiDto = &dto.CompanyBankList{}
 		apiRequestUrl = "company_bank"

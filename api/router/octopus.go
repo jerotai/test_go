@@ -18,21 +18,21 @@ func InitOctopusRouting(routerGroup *gin.RouterGroup) {
 	apiConfInit.InitPutApiConfig = router.InitPutApiConfig
 	apiConfInit.InitDeleteApiConfig = router.InitDeleteApiConfig
 	
-	apicurlSend := apicurl.New(apiConf, apiConfInit)
+	var apiCurlSend = apicurl.GetCurlSend(apiConf, apiConfInit)
 	
 	/**
 	 * manualDeposits Group
 	 */
 	manualDeposits := routerGroup.Group("/manualDeposits")
 	{
-		manualDeposits.GET("/list/:Status/:Start_Time/:End_Time/:Site_Code/:Page/:Count/", apicurlSend.HallSendGet)
-		manualDeposits.GET("/audit/:Txnid", apicurlSend.HallSendGet)
+		manualDeposits.GET("/list/:Status/:Start_Time/:End_Time/:Site_Code/:Page/:Count/", apiCurlSend.HallSendGet)
+		manualDeposits.GET("/audit/:Txnid", apiCurlSend.HallSendGet)
 		
-		manualDeposits.POST("", apicurlSend.HallSendPost)
-		manualDeposits.POST("/pass", apicurlSend.HallSendPost)
-		manualDeposits.POST("/reject", apicurlSend.HallSendPost)
+		manualDeposits.POST("", apiCurlSend.HallSendPost)
+		manualDeposits.POST("/pass", apiCurlSend.HallSendPost)
+		manualDeposits.POST("/reject", apiCurlSend.HallSendPost)
 		
-		manualDeposits.PUT("/unlock", apicurlSend.HallSendPut)
+		manualDeposits.PUT("/unlock", apiCurlSend.HallSendPut)
 	}
 	
 	/**
@@ -40,10 +40,17 @@ func InitOctopusRouting(routerGroup *gin.RouterGroup) {
 	 */
 	manualWithdraws := routerGroup.Group("/manualWithdraws")
 	{
-		manualWithdraws.POST("", apicurlSend.HallSendPost)
-		manualWithdraws.GET("/list/:Status/:Start_Time/:End_Time/:Site_Code/:Page/:Count/", apicurlSend.HallSendGet)
+		manualWithdraws.POST("", apiCurlSend.HallSendPost)
+		manualWithdraws.POST("/auditPass", apiCurlSend.HallSendPost)
+		manualWithdraws.POST("/auditReject", apiCurlSend.HallSendPost)
+		manualWithdraws.POST("/grantPass", apiCurlSend.HallSendPost)
+		manualWithdraws.POST("/grantReject", apiCurlSend.HallSendPost)
 		
-		manualWithdraws.PUT("/unlock", apicurlSend.HallSendPut)
+		manualWithdraws.GET("/list/:Status/:Start_Time/:End_Time/:Site_Code/:Page/:Count/", apiCurlSend.HallSendGet)
+		manualWithdraws.GET("/audit/:Txnid/:Type", apiCurlSend.HallSendGet)
+		manualWithdraws.GET("/grant/:Txnid/:Type", apiCurlSend.HallSendGet)
+		
+		manualWithdraws.PUT("/unlock", apiCurlSend.HallSendPut)
 	}
 
 	/**
@@ -51,20 +58,20 @@ func InitOctopusRouting(routerGroup *gin.RouterGroup) {
 	 */
 	fourthDeposits := routerGroup.Group("/fourthDeposits")
 	{
-		fourthDeposits.GET("/list/:Site_code/:Status/:Start_Time/:End_Time/:Page/:Count/", apicurlSend.HallSendGet)
-		fourthDeposits.GET("/menu/:Site_code", apicurlSend.HallSendGet)
-		fourthDeposits.GET("/audit/:Txnid", apicurlSend.HallSendGet)
+		fourthDeposits.GET("/list/:Site_code/:Status/:Start_Time/:End_Time/:Page/:Count/", apiCurlSend.HallSendGet)
+		fourthDeposits.GET("/menu/:Site_code", apiCurlSend.HallSendGet)
+		fourthDeposits.GET("/audit/:Txnid", apiCurlSend.HallSendGet)
 		
-		fourthDeposits.GET("/limit", apicurlSend.SiteSendGet)
-		fourthDeposits.GET("/menu_thirds", apicurlSend.SiteSendGet)
-		fourthDeposits.GET("/menu_fourths/:Bank_Id", apicurlSend.SiteSendGet)
+		fourthDeposits.GET("/limit", apiCurlSend.SiteSendGet)
+		fourthDeposits.GET("/menu_thirds", apiCurlSend.SiteSendGet)
+		fourthDeposits.GET("/menu_fourths/:Bank_Id", apiCurlSend.SiteSendGet)
 		
-		fourthDeposits.POST("", apicurlSend.SiteSendPost)
+		fourthDeposits.POST("", apiCurlSend.SiteSendPost)
 		
-		fourthDeposits.POST("/pass", apicurlSend.HallSendPost)
-		fourthDeposits.POST("/reject", apicurlSend.HallSendPost)
+		fourthDeposits.POST("/pass", apiCurlSend.HallSendPost)
+		fourthDeposits.POST("/reject", apiCurlSend.HallSendPost)
 		
-		fourthDeposits.PUT("/unlock", apicurlSend.HallSendPut)
+		fourthDeposits.PUT("/unlock", apiCurlSend.HallSendPut)
 	}
 
 	/**
@@ -72,19 +79,19 @@ func InitOctopusRouting(routerGroup *gin.RouterGroup) {
 	 */
 	bankDeposits := routerGroup.Group("/bankDeposits")
 	{
-		bankDeposits.GET("/menu/:Site_Code/:Status/:Start_Time/:End_Time/:Page/:Count/", apicurlSend.HallSendGet)
-		bankDeposits.GET("/front_menu", apicurlSend.SiteSendGet)
+		bankDeposits.GET("/menu/:Site_Code/:Status/:Start_Time/:End_Time/:Page/:Count/", apiCurlSend.HallSendGet)
+		bankDeposits.GET("/front_menu", apiCurlSend.SiteSendGet)
 		
-		bankDeposits.GET("/list/:Site_Code/:Status/:Start_Time/:End_Time/:Page/:Count/", apicurlSend.HallSendGet)
-		bankDeposits.GET("/audit/:Txnid", apicurlSend.HallSendGet)
-		bankDeposits.GET("/menu/:Site_Code", apicurlSend.HallSendGet)
+		bankDeposits.GET("/list/:Site_Code/:Status/:Start_Time/:End_Time/:Page/:Count/", apiCurlSend.HallSendGet)
+		bankDeposits.GET("/audit/:Txnid", apiCurlSend.HallSendGet)
+		bankDeposits.GET("/menu/:Site_Code", apiCurlSend.HallSendGet)
 		
-		bankDeposits.POST("", apicurlSend.SiteSendPost)
+		bankDeposits.POST("", apiCurlSend.SiteSendPost)
 		
-		bankDeposits.POST("/pass", apicurlSend.HallSendPost)
-		bankDeposits.POST("/reject", apicurlSend.HallSendPost)
+		bankDeposits.POST("/pass", apiCurlSend.HallSendPost)
+		bankDeposits.POST("/reject", apiCurlSend.HallSendPost)
 		
-		bankDeposits.PUT("/unlock", apicurlSend.HallSendPut)
+		bankDeposits.PUT("/unlock", apiCurlSend.HallSendPut)
 	}
 
 	/**
@@ -92,15 +99,15 @@ func InitOctopusRouting(routerGroup *gin.RouterGroup) {
 	 */
 	providerDeposits := routerGroup.Group("/providerDeposits")
 	{
-		providerDeposits.GET("/list/:Status/:Start_Time/:End_Time/:Site_Code/:Page/:Count/", apicurlSend.HallSendGet)
-		providerDeposits.GET("/audit/:Txnid", apicurlSend.HallSendGet)
-		providerDeposits.GET("/limit", apicurlSend.SiteSendGet)
+		providerDeposits.GET("/list/:Status/:Start_Time/:End_Time/:Site_Code/:Page/:Count/", apiCurlSend.HallSendGet)
+		providerDeposits.GET("/audit/:Txnid", apiCurlSend.HallSendGet)
+		providerDeposits.GET("/limit", apiCurlSend.SiteSendGet)
 		
-		providerDeposits.POST("/pass", apicurlSend.HallSendPost)
-		providerDeposits.POST("/reject", apicurlSend.HallSendPost)
-		providerDeposits.POST("", apicurlSend.SiteSendPost)
+		providerDeposits.POST("/pass", apiCurlSend.HallSendPost)
+		providerDeposits.POST("/reject", apiCurlSend.HallSendPost)
+		providerDeposits.POST("", apiCurlSend.SiteSendPost)
 		
-		providerDeposits.PUT("/unlock", apicurlSend.HallSendPut)
+		providerDeposits.PUT("/unlock", apiCurlSend.HallSendPut)
 	}
 	
 	/**
@@ -108,14 +115,19 @@ func InitOctopusRouting(routerGroup *gin.RouterGroup) {
 	 */
 	providerWithdraws := routerGroup.Group("/providerWithdraws")
 	{
-		providerWithdraws.GET("/setting", apicurlSend.SiteSendGet)
-		providerWithdraws.GET("/limit", apicurlSend.SiteSendGet)
+		providerWithdraws.GET("/limit", apiCurlSend.SiteSendGet)
 		
-		providerWithdraws.GET("/list/:Status/:Start_Time/:End_Time/:Site_Code/:Page/:Count/", apicurlSend.HallSendGet)
+		providerWithdraws.GET("/list/:Status/:Start_Time/:End_Time/:Site_Code/:Page/:Count/", apiCurlSend.HallSendGet)
+		providerWithdraws.GET("/audit/:Txnid/:Type", apiCurlSend.HallSendGet)
+		providerWithdraws.GET("/grant/:Txnid/:Type", apiCurlSend.HallSendGet)
 		
-		providerWithdraws.POST("", apicurlSend.SiteSendPost)
+		providerWithdraws.POST("", apiCurlSend.SiteSendPost)
+		providerWithdraws.POST("/auditPass", apiCurlSend.HallSendPost)
+		providerWithdraws.POST("/auditReject", apiCurlSend.HallSendPost)
+		providerWithdraws.POST("/grantPass", apiCurlSend.HallSendPost)
+		providerWithdraws.POST("/grantReject", apiCurlSend.HallSendPost)
 		
-		providerWithdraws.PUT("/unlock", apicurlSend.HallSendPut)
+		providerWithdraws.PUT("/unlock", apiCurlSend.HallSendPut)
 	}
 	
 	/**
@@ -123,8 +135,8 @@ func InitOctopusRouting(routerGroup *gin.RouterGroup) {
 	 */
 	trans := routerGroup.Group("/trans")
 	{
-		trans.PUT("/unlock", apicurlSend.HallSendPut)
-		trans.PUT("/selfunlock", apicurlSend.HallSendPut)
+		trans.PUT("/unlock", apiCurlSend.HallSendPut)
+		trans.PUT("/selfunlock", apiCurlSend.HallSendPut)
 	}
 	
 	/**
@@ -132,9 +144,9 @@ func InitOctopusRouting(routerGroup *gin.RouterGroup) {
 	 */
 	asi := routerGroup.Group("/transReports")
 	{
-		asi.GET("/list/:Start_Time/:End_Time", apicurlSend.HallSendGet)
-		asi.GET("/deposit", apicurlSend.SiteSendGet)
-		asi.GET("/withdrawList", apicurlSend.SiteSendGet)
+		asi.GET("/list/:Start_Time/:End_Time", apiCurlSend.HallSendGet)
+		asi.GET("/deposit", apiCurlSend.SiteSendGet)
+		asi.GET("/withdrawList", apiCurlSend.SiteSendGet)
 	}
 	
 	/**
@@ -142,7 +154,7 @@ func InitOctopusRouting(routerGroup *gin.RouterGroup) {
 	 */
 	tsr := routerGroup.Group("/transSumReport")
 	{
-		tsr.GET("/depositList/:Start_Time/:End_Time", apicurlSend.HallSendGet)
-		tsr.GET("/withdrawList/:Start_Time/:End_Time", apicurlSend.HallSendGet)
+		tsr.GET("/depositList/:Start_Time/:End_Time/:Site_Code", apiCurlSend.HallSendGet)
+		tsr.GET("/withdrawList/:Start_Time/:End_Time/:Site_Code", apiCurlSend.HallSendGet)
 	}
 }

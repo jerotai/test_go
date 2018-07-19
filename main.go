@@ -14,5 +14,10 @@ func main() {
 		os.Setenv("ROUTER_PATH", args[1])
 	}
 	
+	if len(args) > 2 {
+		os.Setenv("ROUTER_RSA_OPEN", args[2])
+		fmt.Println(args[2])
+	}
+	
 	api.NewApiService().Start()
 }

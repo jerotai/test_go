@@ -4,7 +4,7 @@ package jellyfishdto
  * Api Url : Agent (GET)
  */
 type AgentList struct {
-	Hall_Code string `json:"hall_code"`
+	//Hall_Code string `json:"hall_code"`
 	GeneralAgent_Id string `json:"generalAgent_id"`
 	Status string `json:"status"`
 	Name string `json:"name"`
@@ -25,7 +25,7 @@ type AgentData struct {
  * Api Url : agent (POST)
  */
 type CreateAgent struct {
-	Hall_Code string `json:"hall_code"`
+	//Hall_Code string `json:"hall_code"`
 	GeneralAgent_Id int `json:"generalAgent_id"`
 	Account string `json:"account"`
 	Password string `json:"password"`
@@ -36,8 +36,8 @@ type CreateAgent struct {
 /**
  * Api Url : agent (PUT)
  */
-type UpdataAgent struct {
-	Hall_Code string `json:"hall_code"`
+type UpdateAgent struct {
+	//Hall_Code string `json:"hall_code"`
 	Id int `json:"id"`
 	Name string `json:"name"`
 	Take_Part int `json:"take_part"`
@@ -46,8 +46,8 @@ type UpdataAgent struct {
 /**
  * Api Url : agent/password 更新代理密碼
  */
-type UpdataAgentPassword struct {
-	Hall_Code string `json:"hall_code"`
+type UpdateAgentPassword struct {
+	//Hall_Code string `json:"hall_code"`
 	Id int `json:"id"`
 	Password string `json:"password"`
 }
@@ -56,6 +56,6 @@ type UpdataAgentPassword struct {
  * Api Url : agent/dropdownlist 取得代理清單(下拉選單用)
  */
 type AgentDropdownList struct {
-	Hall_Code string `json:"hall_code"`
+	//Hall_Code string `json:"hall_code"`
 	Site_Code string `json:"site_code"`
 }
