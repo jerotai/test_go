@@ -96,6 +96,9 @@ func (i *Octopus) InitGetApiConfig(apiUrl string) (string, interface{}) {
 	case "/transSumReport/withdrawList":
 		apiDto = &dto.TransSumReportWithdrawList{}
 		apiRequestUrl = "transSumReport/withdraw"
+	case "/transSumReport/moneyDetail":
+		apiDto = &dto.TransReportsMoneyDetail{}
+		apiRequestUrl = "transSumReport/moneyDetail"
 	default:
 		//todo
 		helper.HelperLog.ErrorLog("[Octopus InitGetApiConfig] Url Not Merge : apiUrl: " + apiUrl)

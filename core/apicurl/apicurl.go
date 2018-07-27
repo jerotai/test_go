@@ -82,20 +82,16 @@ type ApiCurlSendInit struct {
 	HallSendPut func(*gin.Context)
 	SiteSendDelete func(*gin.Context)
 	HallSendDelete func(*gin.Context)
-	JellyFishLogin func(*gin.Context)
-	NewRsaPubKey func(*gin.Context)
-	WhitebaitLogin func(*gin.Context)
-	WhitebaitRegister func(*gin.Context)
 }
 
-func GetCurlSend(apiConf *helper.ApiSettingConf, apiConfInit *ApiConfInit) ApiCurlSendInit {
+/**
+ * 回傳項目:
+ * ApiCurlSendInit : 一般用CRUL 和 RSA用CURL (GET, POST, PUT, DELETE, MultiPartPost)
+ * apiCurl : 各服務專用連線項目
+ */
+func GetCurlSend(apiConf *helper.ApiSettingConf, apiConfInit *ApiConfInit) (*ApiCurlSendInit, *apiCurl, ) {
 	apiServiceSend := New(apiConf, apiConfInit)
-	var apiCurlSend ApiCurlSendInit
-	
-	apiCurlSend.JellyFishLogin = apiServiceSend.JellyFishLogin
-	apiCurlSend.NewRsaPubKey = apiServiceSend.NewRsaPubKey
-	apiCurlSend.WhitebaitLogin = apiServiceSend.WhitebaitLogin
-	apiCurlSend.WhitebaitRegister = apiServiceSend.WhitebaitRegister
+	var apiCurlSend = &ApiCurlSendInit{}
 	
 	apiCurlSend.SiteSendGet = apiServiceSend.SiteSendGet
 	apiCurlSend.HallSendGet = apiServiceSend.HallSendGet
@@ -120,5 +116,5 @@ func GetCurlSend(apiConf *helper.ApiSettingConf, apiConfInit *ApiConfInit) ApiCu
 		apiCurlSend.HallSendDelete = curlSend.HallSendDelete
 	}
 	
-	return apiCurlSend
+	return apiCurlSend, apiServiceSend
 }

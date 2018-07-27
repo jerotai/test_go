@@ -64,7 +64,7 @@ type CreateManualWithdraws struct {
 	Account string `json:"account"`
 	User_Bank_Id int `json:"user_bank_id"`
 	Balance int `json:"balance"`
-	Fee float32 `json:"fee"`
+	Fee int `json:"fee"`
 	Front_Remark string `json:"front_remark"`
 	Back_Remark string `json:"back_remark"`
 }

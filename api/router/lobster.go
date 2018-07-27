@@ -17,17 +17,17 @@ func InitLobsterRouting(routerGroup *gin.RouterGroup) {
 	apiConfInit.InitPutApiConfig = router.InitPutApiConfig
 	apiConfInit.InitDeleteApiConfig = router.InitDeleteApiConfig
 	
-	var apiCurlSend = apicurl.GetCurlSend(apiConf, apiConfInit)
+	var apiCurlSend, _ = apicurl.GetCurlSend(apiConf, apiConfInit)
 	
 	/**
 	 * report Group
 	 */
 	report := routerGroup.Group("/report")
 	{
-		report.GET("/outInList/:Site_Code/:Start_Time/:End_Time", apiCurlSend.HallSendGet)
+		report.GET("/outInList/:Site_Code/:Start_Time/:End_Time/:Order", apiCurlSend.HallSendGet)
 		report.GET("/depositList/:Site_Code/:Start_Time/:End_Time/:Page/:Count/", apiCurlSend.HallSendGet)
 		report.GET("/withdrawList/:Site_Code/:Start_Time/:End_Time/:Page/:Count/", apiCurlSend.HallSendGet)
-		report.GET("/userTrans/:Site_Code/:Start_Time/:End_Time/:User/:Kind/:Page/:Count/", apiCurlSend.HallSendGet)
+		report.GET("/userTrans/:Site_Code/:Start_Time/:End_Time/:User/:Kind/:Page/:Count/:Order/", apiCurlSend.HallSendGet)
 	}
 	
 	/**
@@ -46,8 +46,14 @@ func InitLobsterRouting(routerGroup *gin.RouterGroup) {
 	userLoginReport := routerGroup.Group("/userLoginReport")
 	{
 		userLoginReport.GET("/userLoginDriveCount/:Site_Code/:Start_Time/:End_Time",apiCurlSend.HallSendGet)
-		userLoginReport.GET("/userLoginInfo/:Site_Code/:Start_Time/:End_Time/:Ip_Is_Repeat/:Page/:Count",apiCurlSend.HallSendGet)
-		userLoginReport.GET("/userLoginInfoOnline/:Site_Code/:Start_Time/:End_Time/:Ip_Is_Repeat/:Page/:Count",apiCurlSend.HallSendGet)
-		userLoginReport.GET("/userLoginRecord/:Site_Code/:Start_Time/:End_Time/:Page/:Count",apiCurlSend.HallSendGet)
+		userLoginReport.GET("/userLoginInfo/:Site_Code/:Start_Time/:End_Time/:Ip_Is_Repeat/:Page/:Count/",apiCurlSend.HallSendGet)
+		userLoginReport.GET("/userLoginInfoOnline/:Site_Code/:Start_Time/:End_Time/:Ip_Is_Repeat/:Page/:Count/",apiCurlSend.HallSendGet)
+		userLoginReport.GET("/userLoginRecord/:Site_Code/:Start_Time/:End_Time/:Page/:Count/",apiCurlSend.HallSendGet)
+	}
+	
+	betting := routerGroup.Group("betting")
+	{
+		betting.GET("/subordinate/:Site_Code/:Start_Time/:End_Time/", apiCurlSend.HallSendGet)
+		betting.GET("/subordinateSummary/:Site_Code/:Start_Time/:End_Time", apiCurlSend.HallSendGet)
 	}
 }

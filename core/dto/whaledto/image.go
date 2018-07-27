@@ -9,6 +9,14 @@ type ImageList struct {
 }
 
 /**
+ * Api Url : image/page (GET) 取得圖庫清單（分頁）
+ */
+type ImagePage struct {
+	Page string `json:"page"`
+	Count string `json:"count"`
+}
+
+/**
  * Api Url : image (POST) 新增圖庫
  */
 type CreateImage struct {

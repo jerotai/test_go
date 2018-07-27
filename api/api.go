@@ -23,9 +23,8 @@ func (s *APIService) Start() {
 	g.Use(limit.MaxAllowed(20000))
 	g.Use(gin.Recovery())
 	g.Use(gin.Logger())
-	
 	corsOptions := Options{}
-	//corsOptions.AllowOrigins = []string{"http://moa.cqcp.corp"}
+	//corsOptions.AllowOrigins = []string{helper.CorsOrigins()}
 	corsOptions.AllowCredentials = true
 	g.Use(Middleware(corsOptions))
 	
@@ -59,9 +58,13 @@ func (s *APIService) Start() {
 	electricityGroup := g.Group("/")
 	router.InitElectricityRouting(electricityGroup)
 	
+	//clownfish routes
+	clownfishGroup := g.Group("/")
+	router.InitClownfishRouting(clownfishGroup)
+	
 	//stingray routes
 	stingrayGroup := g.Group("/")
 	router.InitStingrayRouting(stingrayGroup)
 	
-	g.Run(":8082")
+	g.Run(":8084")
 }

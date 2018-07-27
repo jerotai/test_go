@@ -17,7 +17,7 @@ func InitLophiiformesRouting(routerGroup *gin.RouterGroup) {
 	apiConfInit.InitPutApiConfig = router.InitPutApiConfig
 	apiConfInit.InitDeleteApiConfig = router.InitDeleteApiConfig
 	
-	var apiCurlSend = apicurl.GetCurlSend(apiConf, apiConfInit)
+	var apiCurlSend, _ = apicurl.GetCurlSend(apiConf, apiConfInit)
 	
 	/**
 	 * bank list

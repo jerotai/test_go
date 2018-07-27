@@ -44,7 +44,7 @@ func (i *Whitebait) InitGetApiConfig(apiUrl string) (string, interface{}){
 		apiRequestUrl = "user/register/setting"
 	case "/user/alive":
 		apiDto = &dto.UserAlive{}
-		apiRequestUrl = "user/register/alive"
+		apiRequestUrl = "user/alive"
 	case "/user_level/list":
 		apiDto = &dto.UserLevel{}
 		apiRequestUrl = "user_level"
@@ -84,6 +84,15 @@ func (i *Whitebait) InitGetApiConfig(apiUrl string) (string, interface{}){
 	case "/user/blurry":
 		apiDto = &dto.UserBlurry{}
 		apiRequestUrl = "user/blurry"
+	case "/guest/myself":
+		apiDto = &dto.GuestMyself{}
+		apiRequestUrl = "guest/myself"
+	case "/guest/hall":
+		apiDto = &dto.GuestHall{}
+		apiRequestUrl = "guest/hall"
+	case "/guest/site":
+		apiDto = &dto.GuestSite{}
+		apiRequestUrl = "guest/site"
 	default:
 		//todo
 		helper.HelperLog.ErrorLog("[Whitebait InitGetApiConfig] Url Not Merge : apiUrl: " + apiUrl)

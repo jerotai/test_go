@@ -55,7 +55,6 @@ type ArticleInfo struct {
  * Api Url : page_article/info (GET) 取得頁面對應文案
  */
 type PageArticleInfo struct {
-	Id string `json:"id"`
 }
 
 /**
@@ -88,7 +87,7 @@ type UpdatePageArticle struct {
 	Site_Code string `json:"site_code"`
 	Id int `json:"id"`
 	Code string `json:"code"`
-	Article_id int `json:"article_id"`
+	Doc_id int `json:"doc_id"`
 }
 
 /**

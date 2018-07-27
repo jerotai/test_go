@@ -19,3 +19,13 @@ type TransReportDeposit struct {
  */
 type TransReportWithdraw struct {
 }
+
+/**
+ * Api Url : transReports/moneyDetail (GET) 資金明細
+ */
+type TransReportsMoneyDetail struct {
+	Category string `json:"category"`
+	Option string `json:"option"`
+	Start_Time string `json:"start_time"`
+	End_Time string `json:"end_time"`
+}

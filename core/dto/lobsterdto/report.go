@@ -7,6 +7,7 @@ type ReportOotInList struct {
 	Start_Time string `json:"start_time"`
 	End_Time string `json:"end_time"`
 	Site_Code string `json:"site_code"`
+	Order string `json:"order"`
 }
 
 /**
@@ -52,4 +53,5 @@ type ReportUserTrans struct {
 	Type string `json:"type"`
 	Page string `json:"page"`
 	Count string `json:"count"`
+	Order string `json:"order"`
 }

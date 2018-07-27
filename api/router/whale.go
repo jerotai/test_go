@@ -17,7 +17,7 @@ func InitWhaleRouting(whaleGroup *gin.RouterGroup) {
 	apiConfInit.InitPutApiConfig = router.InitPutApiConfig
 	apiConfInit.InitDeleteApiConfig = router.InitDeleteApiConfig
 	
-	var apiCurlSend = apicurl.GetCurlSend(apiConf, apiConfInit)
+	var apiCurlSend, apiServiceSend = apicurl.GetCurlSend(apiConf, apiConfInit)
 	
 	/**
 	 * Menu Group
@@ -83,9 +83,9 @@ func InitWhaleRouting(whaleGroup *gin.RouterGroup) {
 		article.GET("/list/:Site_Code/:Page/:Count", apiCurlSend.HallSendGet)
 		article.GET("/data/:Site_Code/:Id", apiCurlSend.HallSendGet)
 		
-		article.POST("", apiCurlSend.HallSendPost)
+		article.POST("", apiServiceSend.CreateArticle)
 		
-		article.PUT("", apiCurlSend.HallSendPut)
+		article.PUT("", apiServiceSend.UpdateArticle)
 		
 		article.DELETE("", apiCurlSend.HallSendDelete)
 	}
@@ -96,6 +96,7 @@ func InitWhaleRouting(whaleGroup *gin.RouterGroup) {
 	image := whaleGroup.Group("/image")
 	{
 		image.GET("/list", apiCurlSend.HallSendGet)
+		image.GET("/page/:Page/:Count", apiCurlSend.HallSendGet)
 		
 		image.POST("", apiCurlSend.HallSendMultiPartPost)
 		image.POST("/update", apiCurlSend.HallSendMultiPartPost)
@@ -176,7 +177,7 @@ func InitWhaleRouting(whaleGroup *gin.RouterGroup) {
 	 */
 	pageArticle := whaleGroup.Group("/page_article")
 	{
-		pageArticle.GET("/info/:Id", apiCurlSend.SiteSendGet)
+		pageArticle.GET("/info", apiCurlSend.SiteSendGet)
 		
 		pageArticle.GET("/code/:Site_Code", apiCurlSend.HallSendGet)
 		pageArticle.GET("/site/:Site_Code", apiCurlSend.HallSendGet)
@@ -186,5 +187,27 @@ func InitWhaleRouting(whaleGroup *gin.RouterGroup) {
 		pageArticle.PUT("", apiCurlSend.HallSendPut)
 		
 		pageArticle.DELETE("", apiCurlSend.HallSendDelete)
+	}
+	
+	/**
+	 * message Group
+	 */
+	message := whaleGroup.Group("/message")
+	{
+		message.GET("/list", apiCurlSend.SiteSendGet)
+		
+		message.GET("/backEndList/:Site_Code/:Page/:Count/", apiCurlSend.HallSendGet)
+		message.GET("/data/:Site_Code/:Id/:Page/:Count", apiCurlSend.HallSendGet)
+		
+		message.POST("/read", apiCurlSend.SiteSendPost)
+		message.POST("", apiCurlSend.HallSendPost)
+	}
+	
+	/**
+	 * customerService Group
+	 */
+	customerService := whaleGroup.Group("/customer_service")
+	{
+		customerService.GET("/url", apiCurlSend.SiteSendGet)
 	}
 }

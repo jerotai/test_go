@@ -12,6 +12,17 @@ type UserLoginRes struct {
 }
 
 /**
+ * Api Url : guest/login (POST) 登入
+ */
+type GuestLoginRes struct {
+	Code string `json:"code"`
+	Result struct{
+		Api_Token string `json:"api_token"`
+	} `json:"result"`
+	Message string `json:"message"`
+}
+
+/**
  * user/register (POST)
  */
 type CreateUser struct {
@@ -25,6 +36,7 @@ type CreateUser struct {
 	Email string `json:"email"`
 	Qq string `json:"qq"`
 	Wechat string `json:"wechat"`
+	Lock_Rank int `json:"lock_rank"`
 }
 
 /**
@@ -123,7 +135,7 @@ type UpdateUserInfo struct {
 	Phone string `json:"phone"`
 	Qq string `json:"qq"`
 	Wechat string `json:"wechat"`
-	
+	Lock_Rank int `json:"lock_rank"`
 }
 
 /**

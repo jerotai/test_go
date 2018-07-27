@@ -17,12 +17,12 @@ func InitJellyFishRouting(jellyfishGroup *gin.RouterGroup) {
 	apiConfInit.InitPutApiConfig = router.InitPutApiConfig
 	apiConfInit.InitDeleteApiConfig = router.InitDeleteApiConfig
 	
-	var apiCurlSend = apicurl.GetCurlSend(apiConf, apiConfInit)
+	var apiCurlSend, apiServiceSend = apicurl.GetCurlSend(apiConf, apiConfInit)
 	
 	/**
 	 * User Group
 	 */
-	jellyfishGroup.POST(("/login"), apiCurlSend.JellyFishLogin)
+	jellyfishGroup.POST(("/login"), apiServiceSend.JellyFishLogin)
 	
 	/**
 	 * Password Group
@@ -52,8 +52,6 @@ func InitJellyFishRouting(jellyfishGroup *gin.RouterGroup) {
 	 */
 	shareholder := jellyfishGroup.Group("/shareholder")
 	{
-		//hall_code=CQ1&site_code=AA01&status=1&name=AA01
-		//&start_time=2018-05-01 00:00:00&end_time=2018-05-12 23:59:59
 		shareholder.GET(("/list/:Site_Code/:Page/:Count/"), apiCurlSend.HallSendGet)
 		shareholder.GET(("/data/:Id"), apiCurlSend.HallSendGet)
 		shareholder.GET(("/dropdownlist/:Site_Code"), apiCurlSend.HallSendGet)

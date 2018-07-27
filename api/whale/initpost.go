@@ -60,6 +60,12 @@ func (i *Whale) InitPostApiConfig(apiUrl string) (string, interface{}) {
 	case "/page_article":
 		apiDto = &dto.CreatePageArticle{}
 		apiRequestUrl = "page_article"
+	case "/message/read":
+		apiDto = &dto.MessageRead{}
+		apiRequestUrl = "message/read"
+	case "/message":
+		apiDto = &dto.CreateMessage{}
+		apiRequestUrl = "message"
 	default:
 		//todo
 		helper.HelperLog.ErrorLog("[Octopus InitPostApiConfig] Url Not Merge : apiUrl: " + apiUrl)

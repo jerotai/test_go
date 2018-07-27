@@ -30,6 +30,9 @@ func (i *Whitebait) InitPostApiConfig(apiUrl string) (string, interface{}) {
 	case "/user/login":
 		apiDto = &dto.UserLogin{}
 		apiRequestUrl = "user/login"
+	case "/guest/login":
+		apiDto = &dto.GuestLogin{}
+		apiRequestUrl = "guest/login"
 	default:
 		//todo
 		helper.HelperLog.ErrorLog("[Whitebait InitPostApiConfig] Url Not Merge : apiUrl: " + apiUrl)

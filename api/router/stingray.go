@@ -17,10 +17,10 @@ func InitStingrayRouting(group *gin.RouterGroup) {
 	apiConfInit.InitPutApiConfig = router.InitPutApiConfig
 	apiConfInit.InitDeleteApiConfig = router.InitDeleteApiConfig
 	
-	var apiCurlSend = apicurl.GetCurlSend(apiConf, apiConfInit)
+	var _, apiServiceSend = apicurl.GetCurlSend(apiConf, apiConfInit)
 	
 	/**
 	 * rsa/key
 	 */
-	group.POST("/rsa/key", apiCurlSend.NewRsaPubKey)
+	group.POST("/rsa/key", apiServiceSend.NewRsaPubKey)
 }

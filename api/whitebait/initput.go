@@ -51,6 +51,15 @@ func (i *Whitebait) InitPutApiConfig(apiUrl string) (string, interface{}) {
 	case "/user_level/batch":
 		apiDto = &dto.UpdateBackEndUserLevelBatch{}
 		apiRequestUrl = "user_level/batch"
+	case "/guest/myself":
+		apiDto = &dto.UpdateGuestMyself{}
+		apiRequestUrl = "guest/myself"
+	case "/guest/hall":
+		apiDto = &dto.UpdateGuestHall{}
+		apiRequestUrl = "guest/hall"
+	case "/guest/site":
+		apiDto = &dto.UpdateGuestSite{}
+		apiRequestUrl = "guest/site"
 	default:
 		//todo
 		helper.HelperLog.ErrorLog("[Whitebait InitPutApiConfig] Url Not Merge : apiUrl: " + apiUrl)

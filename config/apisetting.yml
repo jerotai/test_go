@@ -19,3 +19,6 @@ lobster_service:
 electricity_service:
   Host: "http://127.0.0.1"
   Port: 2800
+clownfish_service:
+  Host: "http://127.0.0.1"
+  Port: 3000

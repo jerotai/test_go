@@ -60,6 +60,9 @@ func (i *Whale) InitGetApiConfig(apiUrl string) (string, interface{}) {
 	case "/image/list":
 		apiDto = &dto.ImageList{}
 		apiRequestUrl = "image"
+	case "/image/page":
+		apiDto = &dto.ImagePage{}
+		apiRequestUrl = "image/page"
 	case "/home/list":
 		apiDto = &dto.Home{}
 		apiRequestUrl = "home"
@@ -102,7 +105,7 @@ func (i *Whale) InitGetApiConfig(apiUrl string) (string, interface{}) {
 	case "/bulletin/data":
 		apiDto = &dto.BulletinData{}
 		apiRequestUrl = "bulletin/data"
-	case "/page_article":
+	case "/page_article/site":
 		apiDto = &dto.PageArticle{}
 		apiRequestUrl = "page_article"
 	case "/page_article/info":
@@ -111,6 +114,18 @@ func (i *Whale) InitGetApiConfig(apiUrl string) (string, interface{}) {
 	case "/page_article/code":
 		apiDto = &dto.PageArticleCode{}
 		apiRequestUrl = "page_article/code"
+	case "/message/list":
+		apiDto = &dto.MessageList{}
+		apiRequestUrl = "message/list"
+	case "/message/backEndList":
+		apiDto = &dto.MessageBackEndList{}
+		apiRequestUrl = "message"
+	case "/message/data":
+		apiDto = &dto.MessageData{}
+		apiRequestUrl = "message/data"
+	case "/customer_service/url":
+		apiDto = &dto.CustomerServiceUrl{}
+		apiRequestUrl = "customer_service"
 	default:
 		//todo
 		helper.HelperLog.ErrorLog("[Whale InitGetApiConfig] Url Not Merge : apiUrl: " + apiUrl)

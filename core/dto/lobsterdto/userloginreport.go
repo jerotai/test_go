@@ -19,6 +19,8 @@ type UserLoginInfo struct {
 	Page string `json:"page"`
 	Count string `json:"count"`
 	Ip_Is_Repeat string `json:"ip_is_repeat"`
+	Account string `json:"account"`
+	Ip string `json:"ip"`
 }
 
 type UserLoginInfoOnline struct {
@@ -28,6 +30,8 @@ type UserLoginInfoOnline struct {
 	Page string `json:"page"`
 	Count string `json:"count"`
 	Ip_Is_Repeat string `json:"ip_is_repeat"`
+	Account string `json:"account"`
+	Ip string `json:"ip"`
 }
 
 /**
@@ -39,4 +43,6 @@ type UserLoginRecord struct {
 	End_Time string `json:"end_time"`
 	Page string `json:"page"`
 	Count string `json:"count"`
+	Account string `json:"account"`
+	Ip string `json:"ip"`
 }

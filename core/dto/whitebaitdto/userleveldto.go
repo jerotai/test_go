@@ -6,6 +6,8 @@ package whitebaitdto
 type UserLevel struct {
 	Site_Code string `json:"site_code"`
 	Name string `json:"name"`
+	Page string `json:"page"`
+	Count string `json:"count"`
 }
 
 /**

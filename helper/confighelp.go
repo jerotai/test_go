@@ -27,32 +27,32 @@ type redisSettingConf struct {
 
 var (
 	// 單例模式實例
-	redisInst *viper.Viper
-	apiInst *viper.Viper
-	rsaInst *viper.Viper
-	redisConfOnce   sync.Once
-	apiConfOnce    sync.Once
-	rsaConfOnce    sync.Once
+	redisInst     *viper.Viper
+	apiInst       *viper.Viper
+	sysInst       *viper.Viper
+	redisConfOnce sync.Once
+	apiConfOnce   sync.Once
+	sysConfOnce   sync.Once
 )
 
 
-// rsaForge : 取得實例
-func rsaForge() *viper.Viper {
-	rsaConfOnce.Do(func() {
-		rsaInst = viper.New()
+// sysForge : 取得實例
+func sysForge() *viper.Viper {
+	sysConfOnce.Do(func() {
+		sysInst = viper.New()
 		
-		rsaInst.AddConfigPath(configPath())
-		rsaInst.SetConfigName("rsa")
-		rsaInst.SetEnvPrefix("router")
-		rsaInst.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
-		rsaInst.AutomaticEnv()
+		sysInst.AddConfigPath(configPath())
+		sysInst.SetConfigName("sys")
+		sysInst.SetEnvPrefix("router")
+		sysInst.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+		sysInst.AutomaticEnv()
 		
-		if err := rsaInst.ReadInConfig(); err != nil {
-			HelperLog.ErrorLog("[Confighelp rsaForge] " + err.Error())
+		if err := sysInst.ReadInConfig(); err != nil {
+			HelperLog.ErrorLog("[Confighelp sysForge] " + err.Error())
 		}
 	})
 	
-	return rsaInst
+	return sysInst
 }
 
 // apiForge : 取得實例
@@ -163,7 +163,12 @@ func ApiSetting(name string) *ApiSettingConf {
 }
 
 func RsaOpen() string {
-	conf := rsaForge()
+	conf := sysForge()
 	
 	return conf.GetString("rsa_open")
+}
+
+func CorsOrigins() string {
+	conf := sysForge()
+	return conf.GetString("cors_allow_origins")
 }

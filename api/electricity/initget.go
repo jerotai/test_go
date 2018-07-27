@@ -4,6 +4,7 @@ package electricity
 import (
 	dto "Stingray/core/dto/electricitydto"
 	"Stingray/helper"
+	"fmt"
 )
 
 /**
@@ -15,8 +16,9 @@ import (
 func (i *Electricity) InitGetApiConfig(apiUrl string) (string, interface{}){
 	apiRequestUrl := ""
 	var apiDto interface {}
+	fmt.Println("apiUrl", apiUrl)
 	switch apiUrl {
-	case "/reward_config":
+	case "/reward_config/setting":
 		apiDto = &dto.RewardConfig{}
 		apiRequestUrl = "reward_config"
 	case "/reward/info":

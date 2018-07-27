@@ -149,6 +149,13 @@ func DataParseByGet(g *gin.Context, apiDto interface{}) (apiMap map[string]inter
 	datas := make(map[string]interface{})
 	apiMap = make(map[string]interface{})
 	
+	defer func(){
+		if parseErr := recover(); parseErr != nil{
+			err = errors.New(fmt.Sprintf(" [parse-DataParseByGet] : %s", parseErr))
+			return
+		}
+	}()
+	
 	g.ShouldBindQuery(apiDto)
 	
 	for _, param := range g.Params {
@@ -159,13 +166,15 @@ func DataParseByGet(g *gin.Context, apiDto interface{}) (apiMap map[string]inter
 	
 	if err != nil {
 		//後續處理
-		helper.HelperLog.ErrorLog("[parse-DataParseByGet] " + g.Request.URL.Path + ": " + err.Error())
+		err = errors.New(fmt.Sprintf(" [parse-DataParseByGet] : %s", err.Error()))
+		return
 	}
 	
 	json.Unmarshal(tmpJson, apiDto)
 	
 	if apiDto == nil {
-		err = errors.New("apiDto is nil")
+		err = errors.New("[parse-DataParseByGet] apiDto is nil")
+		return
 	}
 	
 	if t := reflect.TypeOf(apiDto); t.Kind() == reflect.Ptr {
@@ -233,7 +242,7 @@ func MultiPartDataParse(g *gin.Context, apiDto interface{}, stationType string, 
 						}
 					}
 				}
-			case "int":
+			case "int", "int32", "int64", "float", "float32", "float64":
 				// Add the int fields
 				if g.PostForm(tag) != "" {
 					fw, _ := mpWriter.CreateFormField(tag)
@@ -259,19 +268,28 @@ func MultiPartDataParse(g *gin.Context, apiDto interface{}, stationType string, 
  * 取得 API POST PUT DELETE 參數
  */
 func DataParse(g *gin.Context, apiDto interface{}) (apiMap map[string]interface{}, err error) {
-	if apiDto == nil {
-		err = errors.New("apiDto is nil")
-	}
-	
 	var inputData = make(map[string]interface{})
 	apiMap = make(map[string]interface{})
+	
+	defer func(){
+		if parseErr := recover(); parseErr != nil{
+			err = errors.New(fmt.Sprintf("[parse-DataParse] : %s", parseErr))
+			return
+		}
+	}()
+	
+	if apiDto == nil {
+		err = errors.New("[parse-DataParse] apiDto is nil")
+		return
+	}
 	
 	body, err := ioutil.ReadAll(g.Request.Body)
 	helper.HelperLog.TraceLog("[parse-DataParse] body: " + string(body))
 	
 	if err != nil {
 		//後續處理
-		helper.HelperLog.ErrorLog(err.Error())
+		err = errors.New("[parse-DataParse] ioutil.ReadAll error " + err.Error())
+		return
 	}
 	
 	json.Unmarshal(body, &inputData)
@@ -289,12 +307,20 @@ func DataParseByRsa(g *gin.Context, apiDto interface{}) (apiMap map[string]inter
 	var inputData = make(map[string]interface{})
 	apiMap = make(map[string]interface{})
 	
+	defer func(){
+		if parseErr := recover(); parseErr != nil{
+			err = errors.New(fmt.Sprintf(" [parse-DataParseByRsa] : %s", parseErr))
+			return
+		}
+	}()
+	
 	body, err := ioutil.ReadAll(g.Request.Body)
 	helper.HelperLog.TraceLog("[parse-DataParseByRsa] Input Body: " + string(body))
 	
 	if err != nil {
 		//後續處理
-		helper.HelperLog.ErrorLog("[parse-DataParseByRsa] Body" + g.Request.URL.Path + ": " + err.Error())
+		err = errors.New(fmt.Sprintf(" [parse-DataParseByRsa] : Body ", err.Error()))
+		return
 	}
 	
 	//取得指定 token 的 rsa private key
@@ -303,7 +329,7 @@ func DataParseByRsa(g *gin.Context, apiDto interface{}) (apiMap map[string]inter
 	rsaKey := rsaRedisService.GetTokenRsaPrivateKey(token)
 	
 	if rsaKey == "" {
-		return apiMap, errors.New("Rsa Key Is Nil")
+		return apiMap, errors.New("[parse-DataParseByRsa] : Rsa Key Is Nil")
 	}
 	
 	//input rsa encode
@@ -313,8 +339,7 @@ func DataParseByRsa(g *gin.Context, apiDto interface{}) (apiMap map[string]inter
 
 	if err != nil {
 		//todo 錯誤處理
-		helper.HelperLog.ErrorLog("[parse-DataParseByRsa] Error: " + g.Request.URL.Path + ": " + err.Error())
-		return apiMap, errors.New(err.Error())
+		return apiMap, errors.New("[parse-DataParseByRsa] Error: " + err.Error())
 	}
 	
 	json.Unmarshal(rsadecode, &inputData)
@@ -340,8 +365,16 @@ func conformDataParse(apiDto interface{}, inputData map[string]interface{}) (map
 			tagMap := strings.Split(string(fv.Tag), ":")
 			tag := fv.Tag.Get(tagMap[0]) //get struct tag type
 			
-			switch v.Elem().Field(i).Type().String() {
 			//如果有特別的型別需要確認 可以加上特別處理方式
+			switch v.Elem().Field(i).Type().String() {
+			case "int", "int32", "int64":
+				if(inputData[tag] != nil) {
+					apiMap[tag] = int(inputData[tag].(float64))
+				}
+			case "float", "float32", "float64":
+				if(inputData[tag] != nil) {
+					apiMap[tag] = fmt.Sprintf("%f", inputData[tag])
+				}
 			default:
 				if(inputData[tag] != nil) {
 					apiMap[tag] = inputData[tag]

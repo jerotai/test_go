@@ -18,7 +18,7 @@ func InitOctopusRouting(routerGroup *gin.RouterGroup) {
 	apiConfInit.InitPutApiConfig = router.InitPutApiConfig
 	apiConfInit.InitDeleteApiConfig = router.InitDeleteApiConfig
 	
-	var apiCurlSend = apicurl.GetCurlSend(apiConf, apiConfInit)
+	var apiCurlSend, _ = apicurl.GetCurlSend(apiConf, apiConfInit)
 	
 	/**
 	 * manualDeposits Group
@@ -147,6 +147,7 @@ func InitOctopusRouting(routerGroup *gin.RouterGroup) {
 		asi.GET("/list/:Start_Time/:End_Time", apiCurlSend.HallSendGet)
 		asi.GET("/deposit", apiCurlSend.SiteSendGet)
 		asi.GET("/withdrawList", apiCurlSend.SiteSendGet)
+		asi.GET("/moneyDetail/:Category/:Option/:Start_Time/:End_Time", apiCurlSend.SiteSendGet)
 	}
 	
 	/**

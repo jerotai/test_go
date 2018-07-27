@@ -17,18 +17,21 @@ func InitElectricityRouting(electricityGroup *gin.RouterGroup) {
 	apiConfInit.InitPutApiConfig = router.InitPutApiConfig
 	apiConfInit.InitDeleteApiConfig = router.InitDeleteApiConfig
 	
-	var apiCurlSend = apicurl.GetCurlSend(apiConf, apiConfInit)
+	var apiCurlSend, _ = apicurl.GetCurlSend(apiConf, apiConfInit)
 	
 	/**
 	 * rewardConfig Group
 	 */
 	rewardConfig := electricityGroup.Group("/reward_config")
 	{
-		rewardConfig.GET("", apiCurlSend.HallSendGet)
+		rewardConfig.GET("/setting/:Site_Code", apiCurlSend.HallSendGet)
 		
 		rewardConfig.PUT("", apiCurlSend.HallSendPut)
 	}
 	
+	/**
+	 * reward Group
+	 */
 	reward := electricityGroup.Group("/reward")
 	{
 		reward.GET("/info", apiCurlSend.SiteSendGet)

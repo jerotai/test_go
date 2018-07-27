@@ -13,7 +13,7 @@ type RewardConfig struct {
 type UpdateRewardConfig struct {
 	Site_Code string `json:"site_code"`
 	Reward_Enable int `json:"reward_enable"`
-	Reward_Permille int `json:"reward_permille"`
+	Reward_Permille float32 `json:"reward_permille"`
 	Upper_Limit float32 `json:"upper_limit"`
 	Lower_Limit float32 `json:"lower_limit"`
 	Settle_Type int `json:"settle_type"`

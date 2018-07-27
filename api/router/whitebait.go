@@ -17,14 +17,14 @@ func InitWhitebaitRouting(whitebaitGroup *gin.RouterGroup) {
 	apiConfInit.InitPutApiConfig = router.InitPutApiConfig
 	apiConfInit.InitDeleteApiConfig = router.InitDeleteApiConfig
 	
-	var apiCurlSend = apicurl.GetCurlSend(apiConf, apiConfInit)
+	var apiCurlSend, apiServiceSend = apicurl.GetCurlSend(apiConf, apiConfInit)
 	
 	/**
 	 * User Group
 	 */
 	user := whitebaitGroup.Group("/user")
 	{
-		user.POST("/login", apiCurlSend.WhitebaitLogin)
+		user.POST("/login", apiServiceSend.WhitebaitLogin)
 		
 		user.GET("/promo_code/:Promotion_Code/:Promotion_Type", apiCurlSend.SiteSendGet)
 		user.GET("/passwordWithdrawCheck", apiCurlSend.SiteSendGet)
@@ -35,7 +35,7 @@ func InitWhitebaitRouting(whitebaitGroup *gin.RouterGroup) {
 		user.GET("/company_bank", apiCurlSend.SiteSendGet)
 		user.GET("/transfer", apiCurlSend.SiteSendGet)
 		user.GET("/alive", apiCurlSend.SiteSendGet)
-		user.POST("/register", apiCurlSend.WhitebaitRegister)
+		user.POST("/register", apiServiceSend.WhitebaitRegister)
 		user.POST("/passwordWithdraw", apiCurlSend.SiteSendPost)
 		user.PUT("/password", apiCurlSend.SiteSendPut)
 		user.PUT("/passwordWithdraw", apiCurlSend.SiteSendPut)
@@ -56,7 +56,7 @@ func InitWhitebaitRouting(whitebaitGroup *gin.RouterGroup) {
 	 */
 	userLevel := whitebaitGroup.Group("user_level")
 	{
-		userLevel.GET("/list/:Site_code", apiCurlSend.HallSendGet)
+		userLevel.GET("/list/:Site_code/:Page/:Count/", apiCurlSend.HallSendGet)
 		userLevel.GET("/data/:Id", apiCurlSend.HallSendGet)
 		userLevel.GET("/amount/:Id/:Type", apiCurlSend.HallSendGet)
 		userLevel.GET("/payment/:Id", apiCurlSend.HallSendGet)
@@ -85,5 +85,21 @@ func InitWhitebaitRouting(whitebaitGroup *gin.RouterGroup) {
 	{
 		bank.GET("/transfer", apiCurlSend.SiteSendGet)
 		bank.GET("/third", apiCurlSend.SiteSendGet)
+	}
+	
+	/**
+	 * guest Group
+	 */
+	guest := whitebaitGroup.Group("/guest")
+	{
+		guest.GET("/myself", apiCurlSend.HallSendGet)
+		guest.GET("/hall", apiCurlSend.HallSendGet)
+		guest.GET("/site", apiCurlSend.HallSendGet)
+		
+		guest.POST("/login", apiServiceSend.WhitebaitGuestLogin)
+		
+		guest.PUT("/myself", apiCurlSend.HallSendPut)
+		guest.PUT("/hall", apiCurlSend.HallSendPut)
+		guest.PUT("/site", apiCurlSend.HallSendPut)
 	}
 }
