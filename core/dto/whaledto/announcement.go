@@ -55,5 +55,5 @@ type DeleteAnnouncement struct {
  * Api Url : announcement/batch (DELETE) 批量刪除系統公告
  */
 type DeleteAnnouncementBatch struct {
-	Ids string `json:"id"`
+	Ids string `json:"ids"`
 }

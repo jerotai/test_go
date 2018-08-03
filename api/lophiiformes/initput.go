@@ -31,6 +31,9 @@ func (l *Lophiiformes) InitPutApiConfig(apiUrl string) (string, interface{})  {
 	case "/user_bank/backend":
 		apiDto = &dto.BackEndUpdateUserBank{}
 		apiRequestUrl = "user_bank/backend"
+	case "/bank_list/backendSite":
+		apiDto = &dto.UpdateBankListbackendSite{}
+		apiRequestUrl = "bank_list/backend/site"
 	default:
 		//todo
 		helper.HelperLog.ErrorLog("[Lophiiformes InitPutApiConfig] Url Not Merge : apiUrl: " + apiUrl)

@@ -54,6 +54,9 @@ func (l *Lobster) InitGetApiConfig(apiUrl string) (string, interface{}) {
 	case "/betting/subordinateSummary":
 		apiDto = &dto.BettingSubordinateSummary{}
 		apiRequestUrl = "betting/subordinate/summary"
+	case "/betting/game":
+		apiDto = &dto.BettingGame{}
+		apiRequestUrl = "betting/game"
 	default:
 		//todo
 		helper.HelperLog.ErrorLog("[Lobster InitGetApiConfig] Url Not Merge : apiUrl: " + apiUrl)

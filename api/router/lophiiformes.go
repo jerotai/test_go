@@ -32,6 +32,9 @@ func InitLophiiformesRouting(routerGroup *gin.RouterGroup) {
 	{
 		bankBank.GET("/fourthThird/:Code", apiCurlSend.HallSendGet)
 		bankBank.GET("/fourthTransfer/:Code", apiCurlSend.HallSendGet)
+		bankBank.GET("/site", apiCurlSend.SiteSendGet)
+		bankBank.GET("/backendSite/:SiteCode", apiCurlSend.HallSendGet)
+		bankBank.PUT("/backendSite", apiCurlSend.HallSendPut)
 	}
 	
 	

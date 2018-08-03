@@ -22,6 +22,12 @@ func (i *Clownfish) InitGetApiConfig(apiUrl string) (string, interface{}){
 	case "/cooperation/fortuneUser":
 		apiDto = &dto.CooperationFortuneUser{}
 		apiRequestUrl = "cooperation/fortune/user"
+	case "game/providerList":
+		apiDto = &dto.GameProviderList{}
+		apiRequestUrl = "game/provider/list"
+	case "game/providerKind":
+		apiDto = &dto.GameProviderKind{}
+		apiRequestUrl = "game/provider/kind"
 	default:
 		//todo
 		helper.HelperLog.ErrorLog("[Clownfish InitGetApiConfig] Url Not Merge : apiUrl: " + apiUrl)

@@ -172,3 +172,8 @@ func CorsOrigins() string {
 	conf := sysForge()
 	return conf.GetString("cors_allow_origins")
 }
+
+func ServicePort() string {
+	conf := sysForge()
+	return conf.GetString("service_port")
+}

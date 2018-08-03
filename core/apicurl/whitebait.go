@@ -13,7 +13,7 @@ import (
 /**
  * USer LoginAccount
  */
-func (a *apiCurl) WhitebaitLogin(g *gin.Context) {
+func (a *apiServiceCurl) WhitebaitLogin(g *gin.Context) {
 	//check api conf
 	apiRequestUrl, inputDto := a.apiConfInit.InitPostApiConfig(g.Request.URL.Path)
 	
@@ -29,7 +29,7 @@ func (a *apiCurl) WhitebaitLogin(g *gin.Context) {
 	
 	//get site code
 	sendParams[trait.Site_Code] = trait.StationCodeParse(g.Request)
-	sendParams["login_ip"] = trait.GetUserIp(g)
+	sendParams["login_ip"] = g.ClientIP()// get client ip
 	sendParams["domain"] = trait.GetUserDomain(g.Request, true)
 	
 	//call whitebait service api
@@ -70,7 +70,7 @@ func (a *apiCurl) WhitebaitLogin(g *gin.Context) {
 /**
  * User Register
  */
-func (a *apiCurl) WhitebaitRegister (g *gin.Context) {
+func (a *apiServiceCurl) WhitebaitRegister (g *gin.Context) {
 	//check api conf
 	apiRequestUrl, inputDto := a.apiConfInit.InitPostApiConfig(g.Request.URL.Path)
 	
@@ -102,7 +102,7 @@ func (a *apiCurl) WhitebaitRegister (g *gin.Context) {
 /**
  * guest/login
  */
-func (a *apiCurl) WhitebaitGuestLogin (g *gin.Context) {
+func (a *apiServiceCurl) WhitebaitGuestLogin (g *gin.Context) {
 	//check api conf
 	apiRequestUrl, inputDto := a.apiConfInit.InitPostApiConfig(g.Request.URL.Path)
 	

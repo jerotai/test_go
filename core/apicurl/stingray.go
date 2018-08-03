@@ -11,7 +11,7 @@ import (
 /**
  * get new rsa key by token
  */
-func (s *apiCurl) NewRsaPubKey (g *gin.Context) {
+func (s *apiServiceCurl) NewRsaPubKey (g *gin.Context) {
 	ApiToken := trait.GetToken(g)
 	
 	pub, pri := helper.CreateRsaKey()

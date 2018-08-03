@@ -51,6 +51,9 @@ func (i *Whale) InitGetApiConfig(apiUrl string) (string, interface{}) {
 	case "/article/list":
 		apiDto = &dto.ArticleList{}
 		apiRequestUrl = "article"
+	case "/article/page":
+		apiDto = &dto.ArticlePage{}
+		apiRequestUrl = "article/page"
 	case "/article/data":
 		apiDto = &dto.ArticleData{}
 		apiRequestUrl = "article/data"
@@ -123,6 +126,9 @@ func (i *Whale) InitGetApiConfig(apiUrl string) (string, interface{}) {
 	case "/message/data":
 		apiDto = &dto.MessageData{}
 		apiRequestUrl = "message/data"
+	case "/message/userData":
+		apiDto = &dto.MessageUserData{}
+		apiRequestUrl = "message/user_data"
 	case "/customer_service/url":
 		apiDto = &dto.CustomerServiceUrl{}
 		apiRequestUrl = "customer_service"

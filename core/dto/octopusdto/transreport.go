@@ -28,4 +28,6 @@ type TransReportsMoneyDetail struct {
 	Option string `json:"option"`
 	Start_Time string `json:"start_time"`
 	End_Time string `json:"end_time"`
+	Page string `json:"page"`
+	Count string `json:"count"`
 }

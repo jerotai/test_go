@@ -43,7 +43,7 @@ func TestFocus(t *testing.T) {
 	apiConfInit.InitPutApiConfig = router.InitPutApiConfig
 	apiConfInit.InitDeleteApiConfig = router.InitDeleteApiConfig
 	
-	var apiCurlSend = apicurl.GetCurlSend(apiConf, apiConfInit)
+	var apiCurlSend, _ = apicurl.GetCurlSend(apiConf, apiConfInit)
 	
 	r.POST("/bookmark/focus", apiCurlSend.HallSendPost)
 	req, err := http.NewRequest(http.MethodPost, "/bookmark/focus", strings.NewReader(rsaencode))

@@ -10,7 +10,7 @@ import (
 /**
  * USer LoginAccount
  */
-func (a *apiCurl) CooperationFortune(g *gin.Context) {
+func (a *apiServiceCurl) CooperationFortune(g *gin.Context) {
 	//check api url path
 	urlSplit := strings.Split(g.Request.URL.Path, "/")
 	

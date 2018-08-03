@@ -38,6 +38,11 @@ type (
 		apiServiceUrl string
 		apiConfInit *ApiConfInit
 	}
+	apiServiceCurl struct {
+		SendCurl *helper.CurlBase
+		apiServiceUrl string
+		apiConfInit *ApiConfInit
+	}
 )
 
 type ApiConfInit struct {
@@ -71,6 +76,14 @@ func NewNormal(apiConf *helper.ApiSettingConf, apiConfInit *ApiConfInit) *apiNor
 	return route
 }
 
+func NewService(apiConf *helper.ApiSettingConf, apiConfInit *ApiConfInit) *apiServiceCurl {
+	route := &apiServiceCurl{}
+	route.SendCurl = apiBaseCurl()
+	route.apiServiceUrl = fmt.Sprintf("%s:%d/", apiConf.Host, apiConf.Port)
+	route.apiConfInit = apiConfInit
+	return route
+}
+
 type ApiCurlSendInit struct {
 	SiteSendGet func(*gin.Context)
 	HallSendGet func(*gin.Context)
@@ -89,14 +102,15 @@ type ApiCurlSendInit struct {
  * ApiCurlSendInit : 一般用CRUL 和 RSA用CURL (GET, POST, PUT, DELETE, MultiPartPost)
  * apiCurl : 各服務專用連線項目
  */
-func GetCurlSend(apiConf *helper.ApiSettingConf, apiConfInit *ApiConfInit) (*ApiCurlSendInit, *apiCurl, ) {
-	apiServiceSend := New(apiConf, apiConfInit)
+func GetCurlSend(apiConf *helper.ApiSettingConf, apiConfInit *ApiConfInit) (*ApiCurlSendInit, *apiServiceCurl) {
+	apiServiceSend := NewService(apiConf, apiConfInit)
+	apiNewSend := New(apiConf, apiConfInit)
 	var apiCurlSend = &ApiCurlSendInit{}
 	
-	apiCurlSend.SiteSendGet = apiServiceSend.SiteSendGet
-	apiCurlSend.HallSendGet = apiServiceSend.HallSendGet
-	apiCurlSend.SiteSendMultiPartPost = apiServiceSend.SiteSendMultiPartPost
-	apiCurlSend.HallSendMultiPartPost = apiServiceSend.HallSendMultiPartPost
+	apiCurlSend.SiteSendGet = apiNewSend.SiteSendGet
+	apiCurlSend.HallSendGet = apiNewSend.HallSendGet
+	apiCurlSend.SiteSendMultiPartPost = apiNewSend.SiteSendMultiPartPost
+	apiCurlSend.HallSendMultiPartPost = apiNewSend.HallSendMultiPartPost
 	
 	if helper.RsaOpen() == "Y" {
 		curlSend := NewRsa(apiConf, apiConfInit)

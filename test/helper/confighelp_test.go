@@ -21,7 +21,7 @@ func TestRedisConf(t *testing.T) {
 
 func TestRedisSettingConf(t *testing.T) {
 	redisSetting := helper.RedisSettingConf()
-	if fmt.Sprintf("%s", redisSetting.PoolSize) == "" ||
+	if fmt.Sprintf("%s", string(redisSetting.PoolSize)) == "" ||
 			redisSetting.PoolTimeout.String() == "" || redisSetting.ReadTimeout.String() == "" ||
 			redisSetting.WriteTimeout.String() == "" || redisSetting.DialTimeout.String() == "" {
 		t.Error("RedisSettingConf Error")
@@ -38,7 +38,7 @@ func TestApiServiceSetting(t *testing.T) {
 
 	for _, v := range apiList {
 		apiConf := helper.ApiSetting(v)
-		if fmt.Sprintf("%s", apiConf.Port) == "" || apiConf.Host == "" {
+		if fmt.Sprintf("%s", string(apiConf.Port)) == "" || apiConf.Host == "" {
 			t.Error("[ApiServiceSetting] " + v + "  Error")
 		}
 	}

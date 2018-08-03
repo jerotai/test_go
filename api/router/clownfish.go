@@ -27,4 +27,13 @@ func InitClownfishRouting(routerGroup *gin.RouterGroup) {
 		cooperation.GET("/fortune/:Code", apiServiceSend.CooperationFortune)
 		cooperation.GET("/fortuneUser/:Code", apiCurlSend.SiteSendGet)
 	}
+	
+	/**
+	 * game Group
+	 */
+	 game := routerGroup.Group("/game")
+	{
+		game.GET("/providerList", apiCurlSend.HallSendGet)
+		game.GET("/providerKind/:Id", apiCurlSend.HallSendGet)
+	}
 }

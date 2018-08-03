@@ -26,7 +26,7 @@ type UpdateGuestMyself struct {
  * Api Url : guest/hall (GET) 取得下層廳主訪客設定
  */
 type GuestHall struct {
-	Id int `json:"id"`
+	Id string `json:"id"`
 }
 
 /**

@@ -43,7 +43,15 @@ type CreateMessage struct {
  */
 type MessageData struct {
 	Site_Code string `json:"site_code"`
+	Id string `json:"id"`
+}
+
+/**
+ * Api Url : message/user_data (GET) 單筆訊息-玩家資料
+ */
+type MessageUserData struct {
+	Site_Code string `json:"site_code"`
+	Id string `json:"id"`
 	Count string `json:"count"`
 	Page string `json:"page"`
-	Id string `json:"id"`
 }

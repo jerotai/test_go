@@ -4,6 +4,7 @@ import (
 	"github.com/aviddiviner/gin-limit"
 	"github.com/gin-gonic/gin"
 	"Stingray/api/router"
+	"Stingray/helper"
 )
 
 type APIService struct {
@@ -66,5 +67,5 @@ func (s *APIService) Start() {
 	stingrayGroup := g.Group("/")
 	router.InitStingrayRouting(stingrayGroup)
 	
-	g.Run(":8084")
+	g.Run(":" + helper.ServicePort())
 }

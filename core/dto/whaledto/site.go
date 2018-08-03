@@ -28,6 +28,7 @@ type CreateSite struct {
 	Customer_Url string `json:"customer_url"`
 	Site_Code string `json:"site_code"`
 	Domains string `json:"domains"`
+	Game_Kind_Ids string `json:"game_kind_ids"`
 }
 
 /**
@@ -39,6 +40,7 @@ type UpdateSite struct {
 	Title string `json:"title"`
 	Logo http.File `json:"logo"`
 	Customer_Url string `json:"customer_url"`
+	Game_Kind_Ids string `json:"game_kind_ids"`
 }
 
 /**

@@ -83,7 +83,7 @@ type RewardPass struct {
  * Api Url : reward/report (GET) 取得推廣會員統計清單（上層）
  */
 type RewardReport struct {
-	site_code string `json:"site_code"`
+	Site_Code string `json:"site_code"`
 	Referrer string `json:"referrer"`
 	Count string `json:"count"`
 	Page string `json:"page"`
@@ -95,7 +95,7 @@ type RewardReport struct {
  * Api Url : reward/report/invitee (GET) 取得被推廣會員統計清單（下層）
  */
 type RewardReportInvitee struct {
-	site_code string `json:"site_code"`
+	Site_Code string `json:"site_code"`
 	Referrer_Id string `json:"referrer_id"`
 	Count string `json:"count"`
 	Page string `json:"page"`

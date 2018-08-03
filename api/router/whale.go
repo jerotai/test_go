@@ -80,7 +80,8 @@ func InitWhaleRouting(whaleGroup *gin.RouterGroup) {
 	article := whaleGroup.Group("/article")
 	{
 		article.GET("/info/:Id", apiCurlSend.SiteSendGet)
-		article.GET("/list/:Site_Code/:Page/:Count", apiCurlSend.HallSendGet)
+		article.GET("/list/:Site_Code", apiCurlSend.HallSendGet)
+		article.GET("/page/:Site_Code/:Page/:Count", apiCurlSend.HallSendGet)
 		article.GET("/data/:Site_Code/:Id", apiCurlSend.HallSendGet)
 		
 		article.POST("", apiServiceSend.CreateArticle)
@@ -197,7 +198,8 @@ func InitWhaleRouting(whaleGroup *gin.RouterGroup) {
 		message.GET("/list", apiCurlSend.SiteSendGet)
 		
 		message.GET("/backEndList/:Site_Code/:Page/:Count/", apiCurlSend.HallSendGet)
-		message.GET("/data/:Site_Code/:Id/:Page/:Count", apiCurlSend.HallSendGet)
+		message.GET("/data/:Site_Code/:Id", apiCurlSend.HallSendGet)
+		message.GET("/userData/:Site_Code/:Id/:Page/:Count", apiCurlSend.HallSendGet)
 		
 		message.POST("/read", apiCurlSend.SiteSendPost)
 		message.POST("", apiCurlSend.HallSendPost)

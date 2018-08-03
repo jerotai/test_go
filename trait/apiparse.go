@@ -93,11 +93,6 @@ func GetToken(g *gin.Context) string {
 	return g.Request.Header.Get("Api-Token")
 }
 
-func GetUserIp(g *gin.Context) string {
-	client_ip := strings.Split(g.Request.RemoteAddr, ":")
-	return client_ip[0]
-}
-
 /**
  * 取得前台user 呼叫 domian
  */

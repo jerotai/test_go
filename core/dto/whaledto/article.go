@@ -5,6 +5,13 @@ package whaledto
  */
 type ArticleList struct {
 	Site_Code string `json:"site_code"`
+}
+
+/**
+ * Service Api Url : article (GET) 後台-取得文案清單 (分頁）
+ */
+type ArticlePage struct {
+	Site_Code string `json:"site_code"`
 	Page string `json:"page"`
 	Count string `json:"count"`
 }

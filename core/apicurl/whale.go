@@ -9,7 +9,7 @@ import (
 /**
  * Create Article Api
  */
-func (a *apiCurl) CreateArticle(g *gin.Context) {
+func (a *apiServiceCurl) CreateArticle(g *gin.Context) {
 	//check api conf
 	apiRequestUrl, inputDto := a.apiConfInit.InitPostApiConfig(g.Request.URL.Path)
 	
@@ -41,7 +41,7 @@ func (a *apiCurl) CreateArticle(g *gin.Context) {
 /**
  * Update Article Api
  */
-func (a *apiCurl) UpdateArticle(g *gin.Context) {
+func (a *apiServiceCurl) UpdateArticle(g *gin.Context) {
 	//check api conf
 	apiRequestUrl, inputDto := a.apiConfInit.InitPutApiConfig(g.Request.URL.Path)
 	

@@ -34,7 +34,7 @@ func TestLogin(t *testing.T) {
 	apiConfInit.InitPutApiConfig = router.InitPutApiConfig
 	apiConfInit.InitDeleteApiConfig = router.InitDeleteApiConfig
 	
-	var apiCurlSend = apicurl.GetCurlSend(apiConf, apiConfInit)
+	var _, apiCurlSend = apicurl.GetCurlSend(apiConf, apiConfInit)
 	
 	
 	r.POST("/login", apiCurlSend.JellyFishLogin)

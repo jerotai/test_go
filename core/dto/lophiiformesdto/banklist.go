@@ -25,3 +25,26 @@ type BankListFourthThird struct {
 type BankListfourthTransfer struct {
 	Code string `json:"code"`
 }
+
+/**
+ * Api Url : bank_list/site (GET) 取得出款銀行設定
+ */
+type BankListSite struct {
+	Status string `json:"status"`
+}
+
+/**
+ * Api Url : bank_list/backend/site (GET) 後台取得出款銀行設定
+ */
+type BankListbackendSite struct {
+	Site_Code string `json:"site_code"`
+	Status string `json:"status"`
+}
+
+/**
+ * Api Url : bank_list/backend/site (PUT) 後台更新出款銀行設定
+ */
+type UpdateBankListbackendSite struct {
+	Site_Code string `json:"site_code"`
+	Banks string `json:"banks"`
+}

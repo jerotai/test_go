@@ -61,6 +61,7 @@ type BackEndUserBankInfo struct {
  * Api Url : user_bank (POST) 後台新增會員銀行卡
  */
 type BackEndCreateUserBank struct {
+	Site_Code string `json:"site_code"`
 	User_Id int `json:"user_id"`
 	Bank_Id int `json:"bank_id"`
 	Name string `json:"name"`
@@ -72,6 +73,7 @@ type BackEndCreateUserBank struct {
  * Api Url : user_bank (PUT) 後台更新會員銀行卡
  */
 type BackEndUpdateUserBank struct {
+	Site_Code string `json:"site_code"`
 	Id int `json:"id"`
 	User_Id int `json:"user_id"`
 	Bank_Id int `json:"bank_id"`

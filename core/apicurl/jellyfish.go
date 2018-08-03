@@ -12,7 +12,7 @@ import (
 /**
  * JellyFish Login Api
  */
-func (j *apiCurl) JellyFishLogin(g *gin.Context) {
+func (j *apiServiceCurl) JellyFishLogin(g *gin.Context) {
 	//check api conf
 	apiRequestUrl, inputDto := j.apiConfInit.InitPostApiConfig(g.Request.URL.Path)
 	

@@ -51,9 +51,13 @@ func InitLobsterRouting(routerGroup *gin.RouterGroup) {
 		userLoginReport.GET("/userLoginRecord/:Site_Code/:Start_Time/:End_Time/:Page/:Count/",apiCurlSend.HallSendGet)
 	}
 	
+	/**
+	 * betting Group
+	 */
 	betting := routerGroup.Group("betting")
 	{
 		betting.GET("/subordinate/:Site_Code/:Start_Time/:End_Time/", apiCurlSend.HallSendGet)
 		betting.GET("/subordinateSummary/:Site_Code/:Start_Time/:End_Time", apiCurlSend.HallSendGet)
+		betting.GET("/game/:Site_Code/:Start_Time/:End_Time/:Order/:Orderby/:Page/:Count", apiCurlSend.HallSendGet)
 	}
 }

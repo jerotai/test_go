@@ -93,8 +93,8 @@ func InitWhitebaitRouting(whitebaitGroup *gin.RouterGroup) {
 	guest := whitebaitGroup.Group("/guest")
 	{
 		guest.GET("/myself", apiCurlSend.HallSendGet)
-		guest.GET("/hall", apiCurlSend.HallSendGet)
-		guest.GET("/site", apiCurlSend.HallSendGet)
+		guest.GET("/hall/:Id", apiCurlSend.HallSendGet)
+		guest.GET("/site/:Site_Code", apiCurlSend.HallSendGet)
 		
 		guest.POST("/login", apiServiceSend.WhitebaitGuestLogin)
 		

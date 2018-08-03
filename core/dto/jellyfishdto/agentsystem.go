@@ -35,10 +35,11 @@ type AgentSystemGeneralAgentTotal struct {
  */
 type AgentSystemAgentTotal struct {
 	Site_Code string `json:"site_code"`
-	General_Agent_Name string `json:"general_agent_name"`
-	Agent_Name string `json:"agent_name"`
-	Page string `json:"page"`
-	Count string `json:"count"`
+    Shareholder_Name string `json:"shareholder_name"`
+    General_Agent_Name string `json:"general_agent_name"`
+    Agent_Name string `json:"agent_name"`
+    Page string `json:"page"`
+    Count string `json:"count"`
 }
 
 /**
